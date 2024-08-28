@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "295294634391",
+    "project_id": "crave-wave-app",
+    "storage_bucket": "crave-wave-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:295294634391:android:36b5c9724b8d338d515cd2",
+        "android_client_info": {
+          "package_name": "com.enggmohd.crave_wave_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDGhFbhucqa5erRonTJPTgXgW8hp8a28o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
