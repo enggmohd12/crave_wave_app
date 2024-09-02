@@ -1,4 +1,5 @@
 import 'package:crave_wave_app/view/login/login_user_view.dart';
+import 'package:crave_wave_app/view/register/register_view.dart';
 import 'package:flutter/material.dart';
 
 class LoginView extends StatefulWidget {
@@ -114,7 +115,9 @@ class _LoginViewState extends State<LoginView> {
                   ),
                 ),
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context,MaterialPageRoute(builder: (context) => const RegisterView(),),);
+                  },
                   child: const Text(
                     'Register',
                     style: TextStyle(
