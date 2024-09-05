@@ -1,6 +1,7 @@
-import 'package:crave_wave_app/view/login/login_user_view.dart';
-import 'package:crave_wave_app/view/register/register_view.dart';
+import 'package:crave_wave_app/bloc/auth/auth_bloc.dart';
+import 'package:crave_wave_app/bloc/auth/auth_event.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -66,7 +67,8 @@ class _LoginViewState extends State<LoginView> {
                 ),
                 child: TextButton(
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginUserView(),),);
+                    context.read<AuthBloc>().add(const AuthGotoLoginView(),);
+                    //Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginUserView(),),);
                   },
                   child: const Text(
                     'Login as User',
@@ -80,43 +82,23 @@ class _LoginViewState extends State<LoginView> {
               const SizedBox(
                 height: 10,
               ),
-              Container(
-                margin: EdgeInsets.only(left: 17),
-                width: MediaQuery.of(context).size.width * 0.9,
-                height: 55,
-                decoration: BoxDecoration(
-                  color: Color(0xffd14545).withOpacity(0.5),
-                  borderRadius: BorderRadius.circular(
-                    8,
-                  ),
-                ),
-                child: TextButton(
-                  onPressed: () {},
-                  child: const Text(
-                    'Login as Restaurant Partner',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
               const SizedBox(
                 height: 10,
               ),
               Container(
-                margin: EdgeInsets.only(left: 17),
+                margin: const EdgeInsets.only(left: 17),
                 width: MediaQuery.of(context).size.width * 0.9,
                 height: 55,
                 decoration: BoxDecoration(
-                  color: Color(0xffd14545).withOpacity(0.5),
+                  color: const Color(0xffd14545).withOpacity(0.5),
                   borderRadius: BorderRadius.circular(
                     8,
                   ),
                 ),
                 child: TextButton(
                   onPressed: () {
-                    Navigator.push(context,MaterialPageRoute(builder: (context) => const RegisterView(),),);
+                    context.read<AuthBloc>().add(const AuthGotoRegisteringView());
+                    //Navigator.push(context,MaterialPageRoute(builder: (context) => const RegisterView(),),);
                   },
                   child: const Text(
                     'Register',

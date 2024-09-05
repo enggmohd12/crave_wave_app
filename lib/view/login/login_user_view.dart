@@ -1,11 +1,14 @@
 import 'dart:io';
 
+import 'package:crave_wave_app/bloc/auth/auth_bloc.dart';
+import 'package:crave_wave_app/bloc/auth/auth_event.dart';
 import 'package:crave_wave_app/view/login/components/forgot_password.dart';
 import 'package:crave_wave_app/view/login/components/login_button.dart';
 import 'package:crave_wave_app/view/login/components/login_divider.dart';
 import 'package:crave_wave_app/view/login/components/login_textfield.dart';
 import 'package:crave_wave_app/view/login/components/signup_link.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginUserView extends StatefulWidget {
   const LoginUserView({super.key});
@@ -44,29 +47,28 @@ class _LoginUserViewState extends State<LoginUserView> {
             SizedBox(
               height: height * 0.05,
             ),
-            if (Platform.isIOS)
-              SizedBox(
-                height: height * 0.1,
-                child: Stack(
-                  children: [
-                    // Left aligned icon button
-                    Positioned(
-                      left: 8.0,
-                      top: 0,
-                      bottom: 0,
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        icon: const Icon(
-                          Icons.arrow_back_ios,
-                          color: Colors.white,
-                        ),
+            SizedBox(
+              height: height * 0.1,
+              child: Stack(
+                children: [
+                  // Left aligned icon button
+                  Positioned(
+                    left: 8.0,
+                    top: 0,
+                    bottom: 0,
+                    child: IconButton(
+                      onPressed: () {
+                        context.read<AuthBloc>().add(const AuthGotoHelloFoodie());
+                      },
+                      icon: const Icon(
+                        Icons.arrow_back_ios,
+                        color: Colors.white,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
+            ),
             if (Platform.isIOS)
               SizedBox(
                 height: height * 0.05,
@@ -172,7 +174,7 @@ class _LoginUserViewState extends State<LoginUserView> {
                       ),
                       const LoginDivider(),
                       SizedBox(
-                        height: height*0.05,
+                        height: height * 0.05,
                       ),
                       const SignUpLink()
                     ],

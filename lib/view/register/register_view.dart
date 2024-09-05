@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:crave_wave_app/bloc/auth/auth_bloc.dart';
+import 'package:crave_wave_app/bloc/auth/auth_event.dart';
 import 'package:crave_wave_app/components/color.dart';
 import 'package:crave_wave_app/view/login/components/login_divider.dart';
 import 'package:crave_wave_app/view/register/components/login_link_buton.dart';
@@ -7,6 +9,7 @@ import 'package:crave_wave_app/view/register/components/register_button.dart';
 import 'package:crave_wave_app/view/register/components/register_textfield.dart';
 import 'package:crave_wave_app/view/register/components/register_textfield_password.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -20,6 +23,7 @@ class _RegisterViewState extends State<RegisterView> {
   final emailController = TextEditingController();
   final passworController = TextEditingController();
   final confirmController = TextEditingController();
+  final restaurantController = TextEditingController();
   bool isVisibleConfirm = false;
   bool isVisible = false;
   bool value = false;
@@ -47,36 +51,38 @@ class _RegisterViewState extends State<RegisterView> {
             SizedBox(
               height: height * 0.05,
             ),
-            if (Platform.isIOS)
-              SizedBox(
-                height: height * 0.07,
-                child: Stack(
-                  children: [
-                    // Left aligned icon button
-                    Positioned(
-                      left: 8.0,
-                      top: 0,
-                      bottom: 0,
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        icon: const Icon(
-                          Icons.arrow_back_ios,
-                          color: Colors.white,
-                        ),
+
+            SizedBox(
+              height: height * 0.03,
+              child: Stack(
+                children: [
+                  // Left aligned icon button
+                  Positioned(
+                    left: 8.0,
+                    top: 0,
+                    bottom: 0,
+                    child: IconButton(
+                      onPressed: () {
+                        context
+                            .read<AuthBloc>()
+                            .add(const AuthGotoHelloFoodie());
+                      },
+                      icon: const Icon(
+                        Icons.arrow_back_ios,
+                        color: Colors.white,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            if (Platform.isIOS)
-              SizedBox(
-                height: height * 0.01,
-              ),
+            ),
+            // if (Platform.isIOS)
+            //   SizedBox(
+            //     height: height * 0.01,
+            //   ),
             if (Platform.isAndroid)
               SizedBox(
-                height: height * 0.09,
+                height: height * 0.03,
               ),
             const Text(
               'Register Here',
@@ -88,7 +94,7 @@ class _RegisterViewState extends State<RegisterView> {
               ),
             ),
             SizedBox(
-              height: height * 0.04,
+              height: height * 0.02,
             ),
             Expanded(
               child: Container(
@@ -155,7 +161,19 @@ class _RegisterViewState extends State<RegisterView> {
                         },
                       ),
                       SizedBox(
-                        height: height * 0.01,
+                        height: height * 0.02,
+                      ),
+                      Visibility(
+                        visible: value,
+                        child: AnimatedContainer(
+                          duration: const Duration(seconds: 1),
+                          child: RegisterTextField(
+                            hintext: 'Restaurant Name',
+                            iconData: Icons.restaurant,
+                            controller: passworController,
+                            type: TextInputType.text,
+                          ),
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0),
@@ -181,19 +199,28 @@ class _RegisterViewState extends State<RegisterView> {
                         height: height * 0.01,
                       ),
                       RegisterButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          context
+                              .read<AuthBloc>()
+                              .add(const AuthRegistringUserEvent(
+                                email: 'ansari.mohammed2930@hgmail.com',
+                                password: 'Mohammed@123',
+                                userName: 'Mohammed Ahmed',
+                                isAdmin: false,
+                              ));
+                        },
                         width: MediaQuery.of(context).size.width * 0.9,
                         text: 'Register',
                       ),
                       SizedBox(
-                        height: height * 0.04,
+                        height: height * 0.02,
                       ),
                       const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 8.0),
                         child: LoginDivider(),
                       ),
                       SizedBox(
-                        height: height * 0.04,
+                        height: height * 0.02,
                       ),
                       const LoginLink()
                     ],

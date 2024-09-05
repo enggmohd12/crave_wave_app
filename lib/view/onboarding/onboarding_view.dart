@@ -1,10 +1,10 @@
+import 'package:crave_wave_app/bloc/auth/auth_bloc.dart';
+import 'package:crave_wave_app/bloc/auth/auth_event.dart';
 import 'package:crave_wave_app/components/color.dart';
-import 'package:crave_wave_app/constants/keys.dart';
-import 'package:crave_wave_app/view/login/login_view.dart';
 import 'package:crave_wave_app/view/onboarding/onboarding_items.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class OnBoardingView extends StatefulWidget {
@@ -118,9 +118,12 @@ class _OnBoardingViewState extends State<OnBoardingView> {
       ),
       child: TextButton(
         onPressed: () async {
-          final pref = await SharedPreferences.getInstance();
+          // final pref = await SharedPreferences.getInstance();
 
-          pref.setBool(isOnboardingDone, true);
+          // pref.setBool(isOnboardingDone, true);
+          context.read<AuthBloc>().add(
+                const AuthOnBoardingEvent(),
+              );
 
           try {
             if (!mounted) {
@@ -128,12 +131,12 @@ class _OnBoardingViewState extends State<OnBoardingView> {
             }
           } catch (_) {}
 
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const LoginView(),
-            ),
-          );
+          // Navigator.pushReplacement(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) => const LoginView(),
+          //   ),
+          // );
         },
         child: const Text(
           'Get Started',

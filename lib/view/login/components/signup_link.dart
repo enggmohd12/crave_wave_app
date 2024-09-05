@@ -1,7 +1,9 @@
+import 'package:crave_wave_app/bloc/auth/auth_bloc.dart';
+import 'package:crave_wave_app/bloc/auth/auth_event.dart';
 import 'package:crave_wave_app/components/color.dart';
-import 'package:crave_wave_app/view/register/register_view.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SignUpLink extends StatelessWidget {
   const SignUpLink({super.key});
@@ -28,12 +30,13 @@ class SignUpLink extends StatelessWidget {
             ),
             recognizer: TapGestureRecognizer()
               ..onTap = () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const RegisterView(),
-                  ),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => const RegisterView(),
+                //   ),
+                // );
+                context.read<AuthBloc>().add(const AuthGotoRegisteringView());
               },
           ),
         ]))
