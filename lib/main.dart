@@ -1,11 +1,15 @@
 import 'package:crave_wave_app/bloc/auth/auth_bloc.dart';
 import 'package:crave_wave_app/bloc/auth/auth_event.dart';
 import 'package:crave_wave_app/bloc/auth/auth_state.dart';
+import 'package:crave_wave_app/components/dialogs/registring_dialog.dart';
+import 'package:crave_wave_app/components/dialogs/show_auth_error.dart';
 import 'package:crave_wave_app/components/loading/loading_screen.dart';
+import 'package:crave_wave_app/view/admin_user/admin_user_view.dart';
 import 'package:crave_wave_app/view/login/login_user_view.dart';
 import 'package:crave_wave_app/view/login/login_view.dart';
 import 'package:crave_wave_app/view/onboarding/onboarding_view.dart';
 import 'package:crave_wave_app/view/register/register_view.dart';
+import 'package:crave_wave_app/view/user/user_view.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,18 +22,12 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  //final prefs = await SharedPreferences.getInstance();
-  //final isOnboarding = prefs.getBool(isOnboardingDone) ?? false;
-  runApp(const MyApp(
-    //isOnboarding: isOnboarding,
-  ));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  //final bool isOnboarding;
   const MyApp({
     super.key,
-    //required this.isOnboarding,
   });
 
   // This widget is the root of your application.
@@ -43,7 +41,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(useMaterial3: false),
-        home: BlocConsumer<AuthBloc,AuthState>(
+        home: BlocConsumer<AuthBloc, AuthState>(
           listener: (context, state) {
             if (state.isLoading) {
               LoadingScreen.instance().show(
@@ -53,23 +51,56 @@ class MyApp extends StatelessWidget {
             } else {
               LoadingScreen.instance().hide();
             }
+
+            final authError = state.authError;
+            if (authError != null) {
+              showAuthError(
+                authError: authError,
+                context: context,
+              );
+            }
+
+            if (state is AuthStateLogOut) {
+              final doneMessage = state.doneRegistrationMessage;
+              final doneTitle = state.doneRegistrationTitle;
+              if (doneMessage != null && doneTitle != null) {
+                showRegistrationDialog(
+                  context,
+                  doneTitle,
+                  doneMessage,
+                );
+              }
+            }
           },
           builder: (context, state) {
-            if (state is AuthStateDoneOnboardingScreen){
-              if (state.isDone){
+            if (state is AuthStateDoneOnboardingScreen) {
+              if (state.isDone) {
                 return const LoginView();
-              } else{
+              } else {
                 return const OnBoardingView();
               }
-            } else if (state is AuthStateLoggedIn){
-              return Container();
-            } else if (state is AuthStateLogOut){
+            } else if (state is AuthStateLoggedIn) {
+              if (state.isAdmin) {
+                return const AdminUserView();
+              } else {
+                return const UserView();
+              }
+            } else if (state is AuthStateLogOut) {
               return const LoginUserView();
-            } else if (state is AuthStateRegistring){
+            } else if (state is AuthStateRegistring) {
               return const RegisterView();
-            } else if (state is AuthStateBack){
+            } else if (state is AuthStateBack) {
               return const LoginView();
-            } else{
+            } else if (state is AuthStateInitialize) {
+              return Scaffold(
+                body: Center(
+                  child: Lottie.asset(
+                    'asset/animation/loading_taco.json',
+                    height: 160,
+                  ),
+                ),
+              );
+            } else {
               return Container();
             }
           },

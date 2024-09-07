@@ -37,8 +37,8 @@ class LoadingScreen {
     _text.add(text);
 
     final state = Overlay.of(context);
-    final renderBox = context.findRenderObject() as RenderBox;
-    final size = renderBox.size;
+    //final renderBox = context.findRenderObject() as RenderBox;
+    //final size = renderBox.size;
 
     final overlay = OverlayEntry(
       builder: (context) {
@@ -47,7 +47,7 @@ class LoadingScreen {
           child: Center(
             child: Lottie.asset(
               'asset/animation/loading_taco.json',
-              height: 180,
+              height: 160,
               // width: 70,
             ),
           ),

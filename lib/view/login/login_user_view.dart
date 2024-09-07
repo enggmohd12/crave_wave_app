@@ -2,6 +2,9 @@ import 'dart:io';
 
 import 'package:crave_wave_app/bloc/auth/auth_bloc.dart';
 import 'package:crave_wave_app/bloc/auth/auth_event.dart';
+import 'package:crave_wave_app/components/dialogs/registring_dialog.dart';
+import 'package:crave_wave_app/components/validators/email_validator.dart';
+import 'package:crave_wave_app/view/forgot_password/forgot_password.dart';
 import 'package:crave_wave_app/view/login/components/forgot_password.dart';
 import 'package:crave_wave_app/view/login/components/login_button.dart';
 import 'package:crave_wave_app/view/login/components/login_divider.dart';
@@ -48,7 +51,7 @@ class _LoginUserViewState extends State<LoginUserView> {
               height: height * 0.05,
             ),
             SizedBox(
-              height: height * 0.1,
+              height: height * 0.08,
               child: Stack(
                 children: [
                   // Left aligned icon button
@@ -58,7 +61,9 @@ class _LoginUserViewState extends State<LoginUserView> {
                     bottom: 0,
                     child: IconButton(
                       onPressed: () {
-                        context.read<AuthBloc>().add(const AuthGotoHelloFoodie());
+                        context
+                            .read<AuthBloc>()
+                            .add(const AuthGotoHelloFoodie());
                       },
                       icon: const Icon(
                         Icons.arrow_back_ios,
@@ -71,11 +76,11 @@ class _LoginUserViewState extends State<LoginUserView> {
             ),
             if (Platform.isIOS)
               SizedBox(
-                height: height * 0.05,
+                height: height * 0.02,
               ),
             if (Platform.isAndroid)
               SizedBox(
-                height: height * 0.16,
+                height: height * 0.1,
               ),
             const Text(
               'Login Here',
@@ -157,15 +162,44 @@ class _LoginUserViewState extends State<LoginUserView> {
                               },
                             ),
                           ),
-                          obscureText: isVisible,
+                          obscureText: !isVisible,
                         ),
                       ),
                       ForgotLinkButton(
                         text: 'Forgot Password?',
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ForgotPasswordView(),
+                            ),
+                          );
+                        },
                       ),
                       LoginButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          final validate = _validation();
+
+                          final isValid = validate.$1;
+
+                          if (isValid) {
+                            context.read<AuthBloc>().add(
+                                  AuthLoggedInEvent(
+                                    email: emailController.text,
+                                    password: passwordController.text,
+                                  ),
+                                );
+                          } else {
+                            final mapData = validate.$2;
+                            final title = mapData['title'];
+                            final message = mapData['message'];
+                            showRegistrationDialog(
+                              context,
+                              title,
+                              message,
+                            );
+                          }
+                        },
                         text: 'Login',
                         width: width * 0.9,
                       ),
@@ -186,5 +220,34 @@ class _LoginUserViewState extends State<LoginUserView> {
         ),
       ),
     );
+  }
+
+  (bool, Map<String, dynamic>) _validation() {
+    (bool, Map<String, dynamic>) returnvalue = (true, {});
+
+    if (emailController.text == '') {
+      return returnvalue =
+          (false, {'title': 'Validation Error', 'message': 'Email required'});
+    } else {
+      final value = validateEmail(emailController.text);
+      if (!value) {
+        return returnvalue = (
+          false,
+          {'title': 'Validation Error', 'message': 'Email is invalid'}
+        );
+      }
+    }
+
+    if (passwordController.text == '') {
+      return returnvalue = (
+        false,
+        {
+          'title': 'Validation Error',
+          'message': 'Password required',
+        }
+      );
+    }
+
+    return returnvalue;
   }
 }

@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:crave_wave_app/bloc/auth/auth_bloc.dart';
 import 'package:crave_wave_app/bloc/auth/auth_event.dart';
 import 'package:crave_wave_app/components/color.dart';
+import 'package:crave_wave_app/components/dialogs/registring_dialog.dart';
+import 'package:crave_wave_app/components/validators/email_validator.dart';
+import 'package:crave_wave_app/components/validators/password_validators.dart';
 import 'package:crave_wave_app/view/login/components/login_divider.dart';
 import 'package:crave_wave_app/view/register/components/login_link_buton.dart';
 import 'package:crave_wave_app/view/register/components/register_button.dart';
@@ -170,7 +173,7 @@ class _RegisterViewState extends State<RegisterView> {
                           child: RegisterTextField(
                             hintext: 'Restaurant Name',
                             iconData: Icons.restaurant,
-                            controller: passworController,
+                            controller: restaurantController,
                             type: TextInputType.text,
                           ),
                         ),
@@ -200,14 +203,29 @@ class _RegisterViewState extends State<RegisterView> {
                       ),
                       RegisterButton(
                         onPressed: () {
-                          context
-                              .read<AuthBloc>()
-                              .add(const AuthRegistringUserEvent(
-                                email: 'ansari.mohammed2930@hgmail.com',
-                                password: 'Mohammed@123',
-                                userName: 'Mohammed Ahmed',
-                                isAdmin: false,
-                              ));
+                          final returnvalue = _validation();
+                          final isValid = returnvalue.$1;
+                          final mapData = returnvalue.$2;
+                          if (isValid) {
+                            context
+                                .read<AuthBloc>()
+                                .add(AuthRegistringUserEvent(
+                                  email: emailController.text,
+                                  password: passworController.text,
+                                  userName: usernameController.text,
+                                  isAdmin: value,
+                                  restaurantName:
+                                      value ? restaurantController.text : null,
+                                ));
+                          } else {
+                            final title = mapData['title'];
+                            final message = mapData['message'];
+                            showRegistrationDialog(
+                              context,
+                              title,
+                              message,
+                            );
+                          }
                         },
                         width: MediaQuery.of(context).size.width * 0.9,
                         text: 'Register',
@@ -232,5 +250,92 @@ class _RegisterViewState extends State<RegisterView> {
         ),
       ),
     );
+  }
+
+  (bool, Map<String, dynamic>) _validation() {
+    (bool, Map<String, dynamic>) returnvalue = (true, {});
+
+    if (usernameController.text == '') {
+      return returnvalue =
+          (false, {'title': 'Validation Error', 'message': 'User name required'});
+    }
+
+    if (emailController.text == '') {
+      return returnvalue =
+          (false, {'title': 'Validation Error', 'message': 'Email required'});
+    } else {
+      final value = validateEmail(emailController.text);
+      if (!value) {
+        return returnvalue = (
+          false,
+          {'title': 'Validation Error', 'message': 'Email is invalid'}
+        );
+      }
+    }
+
+    if (passworController.text == '') {
+      return returnvalue = (
+        false,
+        {
+          'title': 'Validation Error',
+          'message': 'Password required',
+        }
+      );
+    } else {
+      final value = passwordValidator(passworController.text);
+      if (!value) {
+        return returnvalue = (
+          false,
+          {
+            'title': 'Validation Error',
+            'message':
+                'Passwords should contain at least one capital letter, a small letter, a special character, and a number.',
+          }
+        );
+      }
+    }
+
+    if (confirmController.text == '') {
+      return returnvalue = (
+        false,
+        {
+          'title': 'Validation Error',
+          'message': 'Confirm Password required',
+        }
+      );
+    } else {
+      final value = passwordValidator(confirmController.text);
+      if (!value) {
+        return returnvalue = (
+          false,
+          {
+            'title': 'Validation Error',
+            'message':
+                'Passwords should contain at least one capital letter, a small letter, a special character, and a number.',
+          }
+        );
+      }
+
+      if (passworController.text != confirmController.text) {
+        return returnvalue = (
+          false,
+          {
+            'title': 'Validation Error',
+            'message': 'Password and Confirm Password is not same.',
+          }
+        );
+      }
+    }
+
+    if (value) {
+      if (restaurantController.text == '') {
+        return returnvalue = (
+          false,
+          {'title': 'Validation Error', 'message': 'Restaurant name required'}
+        );
+      }
+    }
+
+    return returnvalue;
   }
 }

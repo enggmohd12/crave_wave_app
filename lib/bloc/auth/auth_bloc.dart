@@ -13,7 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc() : super(const AuthStateLogOut(isLoading: false)) {
+  AuthBloc() : super(const AuthStateInitialize(isLoading: false)) {
     on<AuthGotoLoginView>(
       (event, emit) {
         emit(
@@ -59,7 +59,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           emit(AuthStateLoggedIn(
             isLoading: false,
             userid: user.uid,
-            isAdmin: isAdmin == '1' ? true : false,
+            isAdmin: isAdmin,
           ));
         }
       },
@@ -142,7 +142,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             await FirebaseAuth.instance.signOut();
 
             emit(
-              const AuthStateLogOut(isLoading: false),
+              const AuthStateLogOut(
+                isLoading: false,
+                doneRegistrationMessage:
+                    'We have sent you an email for verification. Kindly verify the email before login.',
+                doneRegistrationTitle: 'Registration successful!',
+              ),
             );
           }
         } on FirebaseAuthException catch (e) {
@@ -155,9 +160,98 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         }
       },
     );
+
+    on<AuthLoggedInEvent>(
+      (event, emit) async {
+        emit(const AuthStateLogOut(
+          isLoading: true,
+        ));
+
+        final email = event.email;
+        final password = event.password;
+        try {
+          final credentials =
+              await FirebaseAuth.instance.signInWithEmailAndPassword(
+            email: email,
+            password: password,
+          );
+
+          final user = credentials.user!;
+          if (!user.emailVerified) {
+            await FirebaseAuth.instance.signOut();
+            emit(
+              const AuthStateLogOut(
+                isLoading: false,
+                doneRegistrationMessage: 'Please verify your email',
+                doneRegistrationTitle: 'Verfication required',
+              ),
+            );
+          } else {
+            final userId = user.uid;
+
+            final type = await _getUserType(userId);
+            emit(
+              AuthStateLoggedIn(
+                isAdmin: type,
+                isLoading: false,
+                userid: userId,
+              ),
+            );
+          }
+        } on FirebaseAuthException catch (e) {
+          emit(AuthStateLogOut(
+            isLoading: false,
+            authError: AuthError.from(e),
+          ));
+        }
+      },
+    );
+
+    on<AuthLogOutEvent>(
+      (event, emit) async {
+        final userid = event.userId;
+        final isAdmin = event.isAdmin;
+
+        emit(AuthStateLoggedIn(
+          isAdmin: isAdmin,
+          isLoading: true,
+          userid: userid,
+        ));
+
+        await FirebaseAuth.instance.signOut();
+
+        emit(const AuthStateDoneOnboardingScreen(
+          isLoading: false,
+          isDone: true,
+        ));
+      },
+    );
+
+    on<AuthForgotPasswordEvent>(
+      (event, emit) async {
+        emit(
+          const AuthStateLogOut(
+            isLoading: true,
+          ),
+        );
+
+        await FirebaseAuth.instance.sendPasswordResetEmail(
+          email: event.emailID,
+        );
+
+        emit(
+          const AuthStateLogOut(
+            isLoading: false,
+            doneRegistrationMessage:
+                'We have send you an email to reset the password',
+            doneRegistrationTitle: 'Message',
+          ),
+        );
+      },
+    );
   }
 
-  Future<String> _getUserType(String userId) async {
+  Future<bool> _getUserType(String userId) async {
     try {
       final querySnapshot = await FirebaseFirestore.instance
           .collection(
@@ -173,10 +267,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         var document = querySnapshot.docs.first;
         return document[FirebaseFieldName.userOrAdmin];
       } else {
-        return '0';
+        return false;
       }
     } catch (_) {
-      return '0';
+      return false;
     }
   }
 }

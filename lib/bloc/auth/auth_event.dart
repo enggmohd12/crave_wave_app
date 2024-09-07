@@ -1,3 +1,4 @@
+import 'package:crave_wave_app/typedef/user.dart';
 import 'package:flutter/foundation.dart' show immutable;
 
 @immutable
@@ -35,7 +36,12 @@ class AuthLoggedInEvent extends AuthEvent {
 
 @immutable
 class AuthLogOutEvent extends AuthEvent {
-  const AuthLogOutEvent();
+  final UserId userId;
+  final bool isAdmin;
+  const AuthLogOutEvent({
+    required this.userId,
+    required this.isAdmin,
+  });
 }
 
 @immutable
@@ -49,16 +55,24 @@ class AuthOnBoardingEvent extends AuthEvent {
 }
 
 @immutable
-class AuthGotoRegisteringView extends AuthEvent{
+class AuthGotoRegisteringView extends AuthEvent {
   const AuthGotoRegisteringView();
 }
 
 @immutable
-class AuthGotoLoginView extends AuthEvent{
+class AuthGotoLoginView extends AuthEvent {
   const AuthGotoLoginView();
 }
 
 @immutable
-class AuthGotoHelloFoodie extends AuthEvent{
+class AuthGotoHelloFoodie extends AuthEvent {
   const AuthGotoHelloFoodie();
+}
+
+@immutable
+class AuthForgotPasswordEvent extends AuthEvent {
+  final String emailID;
+  const AuthForgotPasswordEvent({
+    required this.emailID,
+  });
 }

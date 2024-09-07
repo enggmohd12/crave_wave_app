@@ -71,7 +71,7 @@ class _LoginViewState extends State<LoginView> {
                     //Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginUserView(),),);
                   },
                   child: const Text(
-                    'Login as User',
+                    'Login',
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,

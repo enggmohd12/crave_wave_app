@@ -31,14 +31,35 @@ class AuthStateLoggedIn extends AuthState with EquatableMixin {
 
 @immutable
 class AuthStateLogOut extends AuthState with EquatableMixin {
-  const AuthStateLogOut({required super.isLoading});
+  final String? doneRegistrationMessage;
+  final String? doneRegistrationTitle;
+  const AuthStateLogOut({
+    required super.isLoading,
+    this.doneRegistrationMessage,
+    this.doneRegistrationTitle,
+    super.authError,
+  });
   @override
-  List<Object?> get props => [authError, isLoading];
+  List<Object?> get props =>
+      [authError, isLoading, doneRegistrationMessage, doneRegistrationTitle];
 }
 
 @immutable
 class AuthStateRegistring extends AuthState with EquatableMixin {
-  const AuthStateRegistring({required super.isLoading,super.authError});
+  const AuthStateRegistring({
+    required super.isLoading,
+    super.authError,
+  });
+  @override
+  List<Object?> get props => [
+        authError,
+        isLoading,
+      ];
+}
+
+@immutable
+class AuthStateInitialize extends AuthState with EquatableMixin {
+  const AuthStateInitialize({required super.isLoading});
   @override
   List<Object?> get props => [authError, isLoading];
 }
