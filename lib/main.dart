@@ -4,7 +4,7 @@ import 'package:crave_wave_app/bloc/auth/auth_state.dart';
 import 'package:crave_wave_app/components/dialogs/registring_dialog.dart';
 import 'package:crave_wave_app/components/dialogs/show_auth_error.dart';
 import 'package:crave_wave_app/components/loading/loading_screen.dart';
-import 'package:crave_wave_app/view/admin_user/admin_user_view.dart';
+import 'package:crave_wave_app/view/admin_section/admin_user/admin_user_view.dart';
 import 'package:crave_wave_app/view/login/login_user_view.dart';
 import 'package:crave_wave_app/view/login/login_view.dart';
 import 'package:crave_wave_app/view/onboarding/onboarding_view.dart';

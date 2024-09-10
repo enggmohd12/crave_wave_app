@@ -1,0 +1,17 @@
+var items = [     
+    'Choose Item Category',
+    'Biryani', 
+    'Burger', 
+    'Cake',
+    'Chinese',
+    'Icecream',
+    'Momos',
+    'Pancake',
+    'Pasta',
+    'Pizza',
+    'Rolls',
+    'Shakes',
+    'Shawarma', 
+    'Snacks',
+    'Waffle',
+  ];
