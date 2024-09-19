@@ -1,6 +1,7 @@
 import 'package:crave_wave_app/bloc/auth/auth_bloc.dart';
 import 'package:crave_wave_app/bloc/auth/auth_event.dart';
 import 'package:crave_wave_app/bloc/auth/auth_state.dart';
+import 'package:crave_wave_app/bloc/menu/menu_bloc.dart';
 import 'package:crave_wave_app/components/dialogs/registring_dialog.dart';
 import 'package:crave_wave_app/components/dialogs/show_auth_error.dart';
 import 'package:crave_wave_app/components/loading/loading_screen.dart';
@@ -33,11 +34,18 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<AuthBloc>(
-      create: (context) => AuthBloc()
-        ..add(
-          const AuthAppInitializeEvent(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthBloc>(
+          create: (context) => AuthBloc()
+            ..add(
+              const AuthAppInitializeEvent(),
+            ),
         ),
+        BlocProvider<MenuBloc>(
+          create: (context) => MenuBloc(),
+        ),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(useMaterial3: false),

@@ -6,4 +6,5 @@ class FirebaseCollectionName{
   static const userprofile = 'userprofile';
   static const usertype = 'usertype'; 
   static const restaurant = 'restaurant';
+  static const menuItem = 'menuItem';
 }

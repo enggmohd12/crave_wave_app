@@ -44,6 +44,9 @@ dependencies:
   firebase_auth: ^5.2.0
   firebase_storage: ^12.0.1
   cloud_firestore: ^5.0.1
+  permission_handler: ^11.3.1
+  image_picker: ^1.1.2
+  uuid: ^4.5.0
 
 dev_dependencies:
   flutter_test:
@@ -75,6 +78,7 @@ flutter:
     - asset/animation/loading_burger.json
     - asset/animation/loading_taco.json
     - asset/vector/human_food_vector.png
+    - asset/image/image.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

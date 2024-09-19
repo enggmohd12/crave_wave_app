@@ -1,0 +1,4 @@
+enum ItemType {
+  veg,
+  nonveg,
+}

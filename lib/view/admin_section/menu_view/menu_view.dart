@@ -1,8 +1,14 @@
 import 'dart:io';
+import 'package:crave_wave_app/bloc/menu/menu_bloc.dart';
+import 'package:crave_wave_app/bloc/menu/menu_state.dart';
 import 'package:crave_wave_app/components/color.dart';
 import 'package:crave_wave_app/typedef/user.dart';
 import 'package:crave_wave_app/view/admin_section/menu_view/add_menu.dart';
+import 'package:crave_wave_app/view/admin_section/menu_view/components/list_menu_items.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MenuView extends StatefulWidget {
   final UserId userId;
@@ -19,6 +25,7 @@ class _MenuViewState extends State<MenuView> {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Menu'),
@@ -30,8 +37,24 @@ class _MenuViewState extends State<MenuView> {
           // if (Platform.isIOS)
           SizedBox(
             height: Platform.isIOS ? height * 0.78 : height * 0.82,
-            child: const Center(
-              child: Text('No data'),
+            child: BlocBuilder<MenuBloc, MenuState>(
+              builder: (context, state) {
+                if (state is MenuItemsState) {
+                  final data = state.menuItem;
+                  return ListView.builder(
+                    itemCount: data.length,
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      //final indexvalue = data.elementAt(index);
+                      //indexvalue.
+                      return ListUserMenu();
+                    },
+                  );
+                } else {
+                  return Text('Fetching data');
+                }
+              },
             ),
           ),
           Expanded(

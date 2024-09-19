@@ -2,14 +2,22 @@ import 'package:crave_wave_app/components/color.dart';
 import 'package:flutter/material.dart';
 
 class VegNonVegOption extends StatefulWidget {
-  const VegNonVegOption({super.key});
+  final bool isVeg;
+  final VoidCallback onVegPressed;
+  final VoidCallback onNonVegPressed;
+  const VegNonVegOption({
+    super.key,
+    required this.isVeg,
+    required this.onNonVegPressed,
+    required this.onVegPressed,
+  });
 
   @override
   State<VegNonVegOption> createState() => _VegNonVegOptionState();
 }
 
 class _VegNonVegOptionState extends State<VegNonVegOption> {
-  bool isVeg = true;
+  //bool isVeg = true;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -24,11 +32,12 @@ class _VegNonVegOptionState extends State<VegNonVegOption> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           GestureDetector(
-            onTap: () {
-              setState(() {
-                isVeg = !isVeg;
-              });
-            },
+            onTap: widget.onVegPressed,
+            // onTap: () {
+            //   setState(() {
+            //     widget.isVeg = !isVeg;
+            //   });
+            // },
             child: Container(
               height: 50,
               width: 95,
@@ -40,12 +49,12 @@ class _VegNonVegOptionState extends State<VegNonVegOption> {
                     topLeft: Radius.circular(12),
                     bottomLeft: Radius.circular(12),
                   ),
-                  color: isVeg ? backgroundColor : Colors.white),
+                  color: widget.isVeg ? backgroundColor : Colors.white),
               child: Center(
                 child: Text(
                   'Veg',
                   style: TextStyle(
-                    color: isVeg ? Colors.white : backgroundColor,
+                    color: widget.isVeg ? Colors.white : backgroundColor,
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
                   ),
@@ -54,11 +63,12 @@ class _VegNonVegOptionState extends State<VegNonVegOption> {
             ),
           ),
           GestureDetector(
-            onTap: () {
-              setState(() {
-                isVeg = !isVeg;
-              });
-            },
+            onTap: widget.onNonVegPressed,
+            // onTap: () {
+            //   setState(() {
+            //     isVeg = !isVeg;
+            //   });
+            // },
             child: Container(
               height: 50,
               width: 93.5,
@@ -67,12 +77,12 @@ class _VegNonVegOptionState extends State<VegNonVegOption> {
                     topRight: Radius.circular(12),
                     bottomRight: Radius.circular(12),
                   ),
-                  color: !isVeg ? backgroundColor : Colors.white),
+                  color: !widget.isVeg ? backgroundColor : Colors.white),
               child: Center(
                 child: Text(
                   'Non-Veg',
                   style: TextStyle(
-                    color: !isVeg ? Colors.white : backgroundColor,
+                    color: !widget.isVeg ? Colors.white : backgroundColor,
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
                   ),

@@ -10,7 +10,7 @@ class UserView extends StatefulWidget {
 class _UserViewState extends State<UserView> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Center(child: Text('User view'),),
     );
   }
