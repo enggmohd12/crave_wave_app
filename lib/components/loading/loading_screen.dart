@@ -5,7 +5,7 @@ import 'package:lottie/lottie.dart';
 
 class LoadingScreen {
   LoadingScreen._sharedInstance();
-  static late final LoadingScreen _shared = LoadingScreen._sharedInstance();
+  static final LoadingScreen _shared = LoadingScreen._sharedInstance();
   factory LoadingScreen.instance() => _shared;
 
   LoadingScreenController? controller;
@@ -33,8 +33,8 @@ class LoadingScreen {
     required BuildContext context,
     required String text,
   }) {
-    final _text = StreamController<String>();
-    _text.add(text);
+    final text1 = StreamController<String>();
+    text1.add(text);
 
     final state = Overlay.of(context);
     //final renderBox = context.findRenderObject() as RenderBox;
@@ -55,16 +55,16 @@ class LoadingScreen {
       },
     );
 
-    state?.insert(overlay);
+    state.insert(overlay);
 
     return LoadingScreenController(
       close: () {
-        _text.close();
+        text1.close();
         overlay.remove();
         return true;
       },
       update: (text) {
-        _text.add(text);
+        text1.add(text);
         return true;
       },
     );

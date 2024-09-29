@@ -14,7 +14,7 @@ class MenuItem {
   final String originalFileStorageId;
   final ItemType itemType;
   final String itemDescription;
-  final String itemPrice;
+  final int itemPrice;
   final String itemCategory;
 
   MenuItem({

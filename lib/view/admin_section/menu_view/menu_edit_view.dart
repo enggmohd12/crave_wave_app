@@ -2,11 +2,12 @@ import 'dart:io';
 
 import 'package:crave_wave_app/bloc/menu/menu_bloc.dart';
 import 'package:crave_wave_app/bloc/menu/menu_event.dart';
+import 'package:crave_wave_app/bloc/menu/menu_state.dart';
 import 'package:crave_wave_app/components/color.dart';
 import 'package:crave_wave_app/components/dialogs/registring_dialog.dart';
 import 'package:crave_wave_app/components/helper/permission_handler.dart';
 import 'package:crave_wave_app/model/menu/item_type.dart';
-import 'package:crave_wave_app/typedef/user.dart';
+import 'package:crave_wave_app/model/menu/menu_item.dart';
 import 'package:crave_wave_app/view/admin_section/menu_view/components/radio_button.dart';
 import 'package:crave_wave_app/view/admin_section/menu_view/components/textfield.dart';
 import 'package:crave_wave_app/view/admin_section/menu_view/constants/item_type_list.dart';
@@ -14,24 +15,38 @@ import 'package:crave_wave_app/view/admin_section/menu_view/constants/item_type_
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class AddMenuView extends StatefulWidget {
-  final UserId userId;
-  const AddMenuView({
+class EditMenuView extends StatefulWidget {
+  final File? file;
+  final MenuItem menuItem;
+  const EditMenuView({
     super.key,
-    required this.userId,
+    required this.menuItem,
+    required this.file,
   });
 
   @override
-  State<AddMenuView> createState() => _AddMenuViewState();
+  State<EditMenuView> createState() => _AddMenuViewState();
 }
 
-class _AddMenuViewState extends State<AddMenuView> {
+class _AddMenuViewState extends State<EditMenuView> {
   bool isVeg = true;
   File? file;
   final itemNameController = TextEditingController();
   final priceController = TextEditingController();
   final descriptionController = TextEditingController();
   String dropdownvalue = 'Choose Item Category';
+  @override
+  void initState() {
+    super.initState();
+    itemNameController.text = widget.menuItem.itemName;
+    priceController.text = widget.menuItem.itemPrice.toString();
+    descriptionController.text = widget.menuItem.itemDescription;
+    dropdownvalue = widget.menuItem.itemCategory;
+    isVeg = widget.menuItem.itemType == ItemType.veg ? true : false;
+    file = widget.file;
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -178,16 +193,18 @@ class _AddMenuViewState extends State<AddMenuView> {
                   final mapData = validate.$2;
                   if (validate.$1) {
                     int price = int.parse(priceController.text);
-                    context.read<MenuBloc>().add(AddMenuItemEvent(
+                    context.read<MenuBloc>().add(UpdateMenuItemEvent(
                           file: file!,
-                          userId: widget.userId,
+                          userId: widget.menuItem.userId,
                           itemType: isVeg ? ItemType.veg : ItemType.nonveg,
                           itemDescription: descriptionController.text,
                           itemPrice: price,
                           itemName: itemNameController.text,
                           itemCategory: dropdownvalue,
+                          itemId: widget.menuItem.itemId,
+                          originalfileId: widget.menuItem.originalFileStorageId,
                         ));
-                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();    
                   } else {
                     final title = mapData['title'];
                     final message = mapData['message'];

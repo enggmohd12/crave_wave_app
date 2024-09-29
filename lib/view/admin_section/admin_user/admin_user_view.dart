@@ -5,6 +5,7 @@ import 'package:crave_wave_app/bloc/menu/menu_bloc.dart';
 import 'package:crave_wave_app/bloc/menu/menu_event.dart';
 import 'package:crave_wave_app/bloc/menu/menu_state.dart';
 import 'package:crave_wave_app/components/dialogs/logout_dialog.dart';
+import 'package:crave_wave_app/components/dialogs/show_menu_error.dart';
 import 'package:crave_wave_app/components/loading/loading_screen.dart';
 import 'package:crave_wave_app/typedef/user.dart';
 import 'package:crave_wave_app/view/admin_section/menu_view/menu_view.dart';
@@ -39,7 +40,9 @@ class _AdminUserViewState extends State<AdminUserView> {
                 children: [
                   IconButton(
                       onPressed: () {
-                        context.read<MenuBloc>().add(GetMenuItemForUserEvent(userId: userId));
+                        context
+                            .read<MenuBloc>()
+                            .add(GetMenuItemForUserEvent(userId: userId));
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -80,6 +83,21 @@ class _AdminUserViewState extends State<AdminUserView> {
             );
           } else {
             LoadingScreen.instance().hide();
+          }
+          final menuError = state.menuError;
+          if (menuError != null) {
+            showMenuError(
+              authError: menuError,
+              context: context,
+            );
+
+            try{
+              if (state.userId != null){
+                context.read<MenuBloc>().add(GetMenuItemForUserEvent(userId: state.userId!));
+              }              
+            }catch(_){
+
+            }
           }
         },
         child: const Center(

@@ -47,3 +47,26 @@ class GetMenuItemForUserEvent extends MenuEvent {
 class GetAllMenuItemEvent extends MenuEvent {
   const GetAllMenuItemEvent();
 }
+
+class UpdateMenuItemEvent extends MenuEvent {
+  final File file;
+  final String originalfileId;
+  final String itemId;
+  final UserId userId;
+  final ItemType itemType;
+  final String itemDescription;
+  final int itemPrice;
+  final String itemName;
+  final String itemCategory;
+  const UpdateMenuItemEvent({
+    required this.file,
+    required this.userId,
+    required this.itemType,
+    required this.itemDescription,
+    required this.itemPrice,
+    required this.itemName,
+    required this.itemCategory,
+    required this.itemId,
+    required this.originalfileId,
+  });
+}
