@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:crave_wave_app/bloc/menu/menu_bloc.dart';
 import 'package:crave_wave_app/bloc/menu/menu_event.dart';
-import 'package:crave_wave_app/bloc/menu/menu_state.dart';
 import 'package:crave_wave_app/components/color.dart';
 import 'package:crave_wave_app/components/dialogs/registring_dialog.dart';
 import 'package:crave_wave_app/components/helper/permission_handler.dart';

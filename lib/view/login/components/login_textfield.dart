@@ -1,3 +1,4 @@
+import 'package:crave_wave_app/components/color.dart';
 import 'package:flutter/material.dart';
 
 class LoginTextField extends StatelessWidget {
@@ -22,6 +23,7 @@ class LoginTextField extends StatelessWidget {
         top: 15.0,
       ),
       child: TextField(
+        cursorColor: backgroundColor,
         controller: controller,
         decoration: InputDecoration(
           focusedBorder: OutlineInputBorder(

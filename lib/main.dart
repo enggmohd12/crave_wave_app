@@ -10,6 +10,7 @@ import 'package:crave_wave_app/view/login/login_user_view.dart';
 import 'package:crave_wave_app/view/login/login_view.dart';
 import 'package:crave_wave_app/view/onboarding/onboarding_view.dart';
 import 'package:crave_wave_app/view/register/register_view.dart';
+import 'package:crave_wave_app/view/user/user_main_tab/user_main_tab_view.dart';
 import 'package:crave_wave_app/view/user/user_view.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -89,7 +90,7 @@ class MyApp extends StatelessWidget {
               }
             } else if (state is AuthStateLoggedIn) {
               if (state.isAdmin) {
-                return const AdminUserView();
+                return const UserMainTabView(); // Need to change back to AdminUserView() after creating the UI for User
               } else {
                 return const UserView();
               }

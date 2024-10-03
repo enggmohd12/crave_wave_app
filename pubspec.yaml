@@ -50,6 +50,8 @@ dependencies:
   http: ^1.2.2
   path_provider: ^2.1.4
   uri_to_file: ^1.0.0
+  badges: ^3.1.2
+  font_awesome_flutter: ^10.7.0
 
 dev_dependencies:
   flutter_test:
@@ -82,6 +84,19 @@ flutter:
     - asset/animation/loading_taco.json
     - asset/vector/human_food_vector.png
     - asset/image/image.png
+    - asset/menu_images/pizza.png
+    - asset/menu_images/biryani.png
+    - asset/menu_images/burger.png
+    - asset/menu_images/cake.png
+    - asset/menu_images/kebab.png
+    - asset/menu_images/milk-shake.png
+    - asset/menu_images/pancake.png
+    - asset/menu_images/waffle.png
+    - asset/menu_images/chinese-food.png
+    - asset/menu_images/dumpling.png
+    - asset/menu_images/ice-cream.png
+    - asset/menu_images/pasta.png
+    - asset/image/food_background.jpg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

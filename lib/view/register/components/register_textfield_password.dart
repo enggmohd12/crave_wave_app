@@ -1,3 +1,4 @@
+import 'package:crave_wave_app/components/color.dart';
 import 'package:flutter/material.dart';
 
 class RegisterTextFieldPassword extends StatefulWidget {
@@ -33,6 +34,7 @@ class _RegisterTextFieldPasswordState extends State<RegisterTextFieldPassword> {
         //top: 12.0,
       ),
       child: TextField(
+        cursorColor: backgroundColor,
         obscureText: !widget.isVisible,
         controller: widget.controller,
         keyboardType: widget.type,
