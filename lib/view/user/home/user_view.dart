@@ -1,13 +1,15 @@
 import 'dart:io';
 import 'package:crave_wave_app/components/color.dart';
+import 'package:crave_wave_app/components/get_location_from_coordinates/get_location_coordinates.dart';
 import 'package:crave_wave_app/view/user/component/custome_divider.dart';
 import 'package:crave_wave_app/view/user/component/explore_box.dart';
-import 'package:crave_wave_app/view/user/component/text_field_user_search.dart';
+import 'package:crave_wave_app/view/user/component/sliding_textfield.dart';
 import 'package:crave_wave_app/view/user/contant/explore_list.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
-import 'package:flutter/widgets.dart';
+import 'package:geocode/geocode.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:location/location.dart';
 
 class UserView extends StatefulWidget {
   const UserView({super.key});
@@ -76,37 +78,87 @@ class _UserViewState extends State<UserView> {
               SizedBox(
                 height: height * 0.02,
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Delivering to',
-                      style: TextStyle(fontSize: 11),
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          'Current Location',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black54,
+              InkWell(
+                onTap: () async {
+                  Location location = Location();
+                  GeoCode geoCode = GeoCode();
+                  bool serviceEnabled;
+                  PermissionStatus permissionGranted;
+                  LocationData locationData;
+
+                  serviceEnabled = await location.serviceEnabled();
+                  if (!serviceEnabled) {
+                    serviceEnabled = await location.requestService();
+                    if (!serviceEnabled) {
+                      return;
+                    }
+                  }
+
+                  permissionGranted = await location.hasPermission();
+                  if (permissionGranted == PermissionStatus.denied) {
+                    permissionGranted = await location.requestPermission();
+                    if (permissionGranted != PermissionStatus.granted) {
+                      return;
+                    }
+                  }
+                  // if (Platform.isIOS) {
+                  final geo = await Geolocator.getCurrentPosition();
+
+                  await getLocationName(
+                    latitude: geo.latitude,
+                    longitude: geo.longitude,
+                  );
+
+                  // final address = await geoCode.reverseGeocoding(
+                  //     latitude: geo.latitude, longitude: geo.longitude);
+                  // print(address.city);
+                  // print(address.streetAddress);
+                  // print(address.postal);
+                  // print(address.region);
+                  // } else {
+                  //   locationData = await location.getLocation();
+                  //   final address = await geoCode.reverseGeocoding(
+                  //       latitude: locationData.latitude!,
+                  //       longitude: locationData.longitude!);
+                  //   print(address.city);
+                  //   print(address.streetAddress);
+                  //   print(address.postal);
+                  //   print(address.region);
+                  //   //print(locationData);
+                  // }
+                },
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Delivering to',
+                        style: TextStyle(fontSize: 11),
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            'Current Location',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black54,
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        RotatedBox(
-                          quarterTurns: 315,
-                          child: Icon(
-                            Icons.arrow_back_ios_new,
-                            color: backgroundColor,
+                          SizedBox(
+                            width: 5,
                           ),
-                        ),
-                      ],
-                    )
-                  ],
+                          RotatedBox(
+                            quarterTurns: 315,
+                            child: Icon(
+                              Icons.arrow_back_ios_new,
+                              color: backgroundColor,
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               ),
               SizedBox(
@@ -116,10 +168,13 @@ class _UserViewState extends State<UserView> {
                 padding: const EdgeInsets.symmetric(
                   horizontal: 20.0,
                 ),
-                child: UserSearchFoodTextField(
+                child: SlidingTextField(
                   controller: searchFoodController,
-                  hintText: 'Search Food',
                 ),
+                // UserSearchFoodTextField(
+                //   controller: searchFoodController,
+                //   hintText: 'Search Food',
+                // ),
               ),
               SizedBox(
                 height: height * 0.01,
@@ -162,7 +217,7 @@ class _UserViewState extends State<UserView> {
                           Container(
                             margin: const EdgeInsets.symmetric(horizontal: 20),
                             height: 200,
-                            width: 400,
+                            width: MediaQuery.of(context).size.width * 0.9,
                             decoration: BoxDecoration(
                                 color: Colors.black,
                                 borderRadius: BorderRadius.circular(12)),
@@ -178,7 +233,7 @@ class _UserViewState extends State<UserView> {
                             left: 35,
                             top: 130,
                             child: Text(
-                              'Persian Darbar indes ${index}',
+                              'Persian Darbar indes $index',
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 21,

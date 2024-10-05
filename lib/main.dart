@@ -1,6 +1,8 @@
 import 'package:crave_wave_app/bloc/auth/auth_bloc.dart';
 import 'package:crave_wave_app/bloc/auth/auth_event.dart';
 import 'package:crave_wave_app/bloc/auth/auth_state.dart';
+import 'package:crave_wave_app/bloc/location/location_bloc/location_bloc.dart';
+import 'package:crave_wave_app/bloc/location/location_event/location_event.dart';
 import 'package:crave_wave_app/bloc/menu/menu_bloc.dart';
 import 'package:crave_wave_app/components/dialogs/registring_dialog.dart';
 import 'package:crave_wave_app/components/dialogs/show_auth_error.dart';
@@ -11,7 +13,7 @@ import 'package:crave_wave_app/view/login/login_view.dart';
 import 'package:crave_wave_app/view/onboarding/onboarding_view.dart';
 import 'package:crave_wave_app/view/register/register_view.dart';
 import 'package:crave_wave_app/view/user/user_main_tab/user_main_tab_view.dart';
-import 'package:crave_wave_app/view/user/user_view.dart';
+import 'package:crave_wave_app/view/user/home/user_view.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -46,6 +48,12 @@ class MyApp extends StatelessWidget {
         BlocProvider<MenuBloc>(
           create: (context) => MenuBloc(),
         ),
+        BlocProvider<LocationBloc>(
+          create: (context) => LocationBloc()
+            ..add(
+              const LocationInitializeEvent(),
+            ),
+        )
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -90,6 +98,7 @@ class MyApp extends StatelessWidget {
               }
             } else if (state is AuthStateLoggedIn) {
               if (state.isAdmin) {
+                // return const AdminUserView();
                 return const UserMainTabView(); // Need to change back to AdminUserView() after creating the UI for User
               } else {
                 return const UserView();

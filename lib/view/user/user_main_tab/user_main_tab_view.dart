@@ -1,6 +1,6 @@
 import 'package:crave_wave_app/components/color.dart';
 import 'package:crave_wave_app/view/user/component/tab_button.dart';
-import 'package:crave_wave_app/view/user/user_view.dart';
+import 'package:crave_wave_app/view/user/home/user_view.dart';
 import 'package:flutter/material.dart';
 
 class UserMainTabView extends StatefulWidget {
