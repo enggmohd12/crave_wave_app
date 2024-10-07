@@ -26,12 +26,45 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
             permissionGranted = await location.hasPermission();
             if (permissionGranted == PermissionStatus.denied) {
               permissionGranted = await location.requestPermission();
-              if (permissionGranted != PermissionStatus.granted) {
+              if (permissionGranted == PermissionStatus.granted) {
                 emit(
-                  const LocationNoPermission(
-                    isLoading: false,
+                  const LocationLoadingState(
+                    isLoading: true,
                   ),
                 );
+                final geo = await Geolocator.getCurrentPosition();
+
+                final result = await getLocationName(
+                  latitude: geo.latitude,
+                  longitude: geo.longitude,
+                );
+
+                emit(
+                  LocationDataState(
+                    isLoading: false,
+                    city: result.city,
+                    country: result.country,
+                    pincode: result.pincode,
+                    streetName: result.streetName,
+                    area: result.area,
+                  ),
+                );
+              } else {
+                if (permissionGranted == PermissionStatus.deniedForever) {
+                  //print('denied forever');
+                  // Need to add state to say that it is denied forever than need to open app setting state
+                  emit(
+                    const LocationNoPermission(
+                      isLoading: false,
+                    ),
+                  );
+                } else {
+                  emit(
+                    const LocationNoPermission(
+                      isLoading: false,
+                    ),
+                  );
+                }
               }
             } else {
               emit(
@@ -53,11 +86,107 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
                   country: result.country,
                   pincode: result.pincode,
                   streetName: result.streetName,
+                  area: result.area,
                 ),
               );
             }
           }
+        } else {
+          permissionGranted = await location.hasPermission();
+          if (permissionGranted == PermissionStatus.denied) {
+            permissionGranted = await location.requestPermission();
+            if (permissionGranted == PermissionStatus.granted) {
+              emit(
+                const LocationLoadingState(
+                  isLoading: true,
+                ),
+              );
+              final geo = await Geolocator.getCurrentPosition();
+
+              final result = await getLocationName(
+                latitude: geo.latitude,
+                longitude: geo.longitude,
+              );
+
+              emit(
+                LocationDataState(
+                  isLoading: false,
+                  city: result.city,
+                  country: result.country,
+                  pincode: result.pincode,
+                  streetName: result.streetName,
+                  area: result.area,
+                ),
+              );
+            } else {
+              if (permissionGranted == PermissionStatus.deniedForever) {
+                //print('denied forever');
+                // Need to add state to say that it is denied forever than need to open app setting state
+                emit(
+                  const LocationNoPermission(
+                    isLoading: false,
+                  ),
+                );
+              } else {
+                emit(
+                  const LocationNoPermission(
+                    isLoading: false,
+                  ),
+                );
+              }
+            }
+          } else {
+            emit(
+              const LocationLoadingState(
+                isLoading: true,
+              ),
+            );
+            final geo = await Geolocator.getCurrentPosition();
+
+            final result = await getLocationName(
+              latitude: geo.latitude,
+              longitude: geo.longitude,
+            );
+
+            emit(
+              LocationDataState(
+                isLoading: false,
+                city: result.city,
+                country: result.country,
+                pincode: result.pincode,
+                streetName: result.streetName,
+                area: result.area,
+              ),
+            );
+          }
         }
+      },
+    );
+
+    on<GetLocationEvent>(
+      (event, emit) async{
+        emit(
+              const LocationLoadingState(
+                isLoading: true,
+              ),
+            );
+            final geo = await Geolocator.getCurrentPosition();
+
+            final result = await getLocationName(
+              latitude: geo.latitude,
+              longitude: geo.longitude,
+            );
+
+            emit(
+              LocationDataState(
+                isLoading: false,
+                city: result.city,
+                country: result.country,
+                pincode: result.pincode,
+                streetName: result.streetName,
+                area: result.area,
+              ),
+            );
       },
     );
   }

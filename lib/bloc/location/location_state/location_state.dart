@@ -40,12 +40,14 @@ class LocationDataState extends LocationState with EquatableMixin {
   final String? country;
   final String? streetName;
   final String? pincode;
+  final String? area;
   const LocationDataState({
     required super.isLoading,
     required this.city,
     required this.country,
     required this.pincode,
     required this.streetName,
+    required this.area,
   });
   @override
   List<Object?> get props => [
@@ -54,5 +56,6 @@ class LocationDataState extends LocationState with EquatableMixin {
         country,
         streetName,
         pincode,
+        area,
       ];
 }

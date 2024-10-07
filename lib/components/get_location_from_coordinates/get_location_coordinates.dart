@@ -23,5 +23,6 @@ Future<LocationInfo> getLocationName({
     country: address.country,
     pincode: address.postalCode,
     streetName: address.street,
+    area: address.subLocality
   );
 }
