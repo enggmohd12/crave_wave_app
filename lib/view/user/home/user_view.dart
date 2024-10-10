@@ -9,7 +9,7 @@ import 'package:crave_wave_app/components/get_location_from_coordinates/get_loca
 import 'package:crave_wave_app/components/loading/loading_screen.dart';
 import 'package:crave_wave_app/view/user/component/custome_divider.dart';
 import 'package:crave_wave_app/view/user/component/explore_box.dart';
-import 'package:crave_wave_app/view/user/component/sliding_textfield.dart';
+import 'package:crave_wave_app/view/user/component/search_item_category_textfield.dart';
 import 'package:crave_wave_app/view/user/contant/explore_list.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
@@ -27,6 +27,7 @@ class UserView extends StatefulWidget {
 
 class _UserViewState extends State<UserView> {
   final searchFoodController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -395,18 +396,78 @@ class _UserViewState extends State<UserView> {
                 SizedBox(
                   height: height * 0.01,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20.0,
-                  ),
-                  child: SlidingTextField(
-                    controller: searchFoodController,
-                  ),
-                  // UserSearchFoodTextField(
-                  //   controller: searchFoodController,
-                  //   hintText: 'Search Food',
-                  // ),
+                SearchTextField(
+                  searchFoodController: searchFoodController,
                 ),
+                // Padding(
+                //   padding: const EdgeInsets.symmetric(
+                //     horizontal: 20.0,
+                //   ),
+                //   child: TypeAheadField(
+                //     itemBuilder: (context, value) {
+                //       return ListTile(
+                //         leading: CircleAvatar(
+                //           radius: 25,
+                //           child: ClipOval(
+                //             child: Image.network(
+                //               value.fileUrl,
+                //               width: 50,
+                //               height: 50,
+                //               fit: BoxFit.fill,
+                //             ),
+                //           ),
+                //         ),
+                //         title: Text(value.itemName),
+                //         subtitle: Text(
+                //           '\u{20B9}${value.itemPrice.toString()}',
+                //         ),
+                //         trailing: Stack(
+                //           alignment: Alignment.center,
+                //           children: [
+                //             Icon(
+                //               Icons.crop_square_sharp,
+                //               color: value.itemType == ItemType.veg
+                //                   ? Colors.green
+                //                   : Colors.red,
+                //               size: 30,
+                //             ),
+                //             Icon(
+                //               Icons.circle,
+                //               color: value.itemType == ItemType.veg
+                //                   ? Colors.green
+                //                   : Colors.red,
+                //               size: 8,
+                //             ),
+                //           ],
+                //         ),
+                //       );
+                //     },
+                //     onSelected: (value) {},
+                //     suggestionsCallback: (search) async {
+                //       final menuItem =
+                //           await getMenuItemCateforyWise(searchTerm: search);
+                //       List<MenuItem> lst = menuItem.toList();
+                //       return lst;
+                //     },
+                //     builder: (context, controller, focusNode) {
+                //       return SlidingTextField(
+                //         controller: controller,
+                //         focusNode: focusNode,
+                //       );
+                //     },
+                //     errorBuilder: (context, error) {
+                //       return const Text('Error Occured');
+                //     },
+                //     controller: searchFoodController,
+                //   ),
+                //   // child: SlidingTextField(
+                //   //   controller: searchFoodController,
+                //   // ),
+                //   // UserSearchFoodTextField(
+                //   //   controller: searchFoodController,
+                //   //   hintText: 'Search Food',
+                //   // ),
+                // ),
                 SizedBox(
                   height: height * 0.01,
                 ),

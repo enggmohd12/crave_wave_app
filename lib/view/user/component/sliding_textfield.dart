@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 
 class SlidingTextField extends StatefulWidget {
   final TextEditingController controller;
+  final FocusNode focusNode;
   const SlidingTextField({
     super.key,
     required this.controller,
+    required this.focusNode,
   });
 
   @override
@@ -37,7 +39,7 @@ class _SlidingTextFieldState extends State<SlidingTextField>
   late AnimationController _animationController;
   late Animation<Offset> _slideAnimation;
   bool _showHint = true;
-  final FocusNode _focusNode = FocusNode();
+  //final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
@@ -59,20 +61,20 @@ class _SlidingTextFieldState extends State<SlidingTextField>
     _startHintTextRotation();
 
     widget.controller.addListener(_onTextChanged);
-    _focusNode.addListener(_onFocusChanged);
+    widget.focusNode.addListener(_onFocusChanged);
   }
 
   void _onTextChanged() {
     setState(() {
       // Show hint if the text field is empty, otherwise hide it
-      _showHint = widget.controller.text.isEmpty && !_focusNode.hasFocus;
+      _showHint = widget.controller.text.isEmpty && !widget.focusNode.hasFocus;
     });
   }
 
   void _onFocusChanged() {
     setState(() {
       // Hide the hint when the field is focused, show it when unfocused and empty
-      _showHint = !_focusNode.hasFocus && widget.controller.text.isEmpty;
+      _showHint = !widget.focusNode.hasFocus && widget.controller.text.isEmpty;
     });
   }
 
@@ -94,7 +96,7 @@ class _SlidingTextFieldState extends State<SlidingTextField>
   void dispose() {
     _timer?.cancel();
     _animationController.dispose();
-    _focusNode.dispose();
+    
     // No need to dispose the controller here since it's passed by the parent widget
     super.dispose();
   }
@@ -104,7 +106,7 @@ class _SlidingTextFieldState extends State<SlidingTextField>
     return TextField(
       cursorColor: backgroundColor,
       controller: widget.controller,
-      focusNode: _focusNode,
+      focusNode: widget.focusNode,
       decoration: InputDecoration(
         focusedBorder: OutlineInputBorder(
             borderRadius: const BorderRadius.all(Radius.circular(10)),
