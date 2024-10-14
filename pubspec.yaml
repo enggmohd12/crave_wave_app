@@ -102,6 +102,8 @@ flutter:
     - asset/menu_images/ice-cream.png
     - asset/menu_images/pasta.png
     - asset/image/food_background.jpg
+    - asset/animation/empty.json
+    - asset/animation/data_not_found.json
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
