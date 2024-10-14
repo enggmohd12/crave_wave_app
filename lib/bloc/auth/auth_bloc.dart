@@ -56,10 +56,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           ));
         } else {
           final isAdmin = await _getUserType(user.uid);
+          final userName = await getUserName(user.uid);
           emit(AuthStateLoggedIn(
             isLoading: false,
             userid: user.uid,
             isAdmin: isAdmin,
+            userName: userName,
           ));
         }
       },
@@ -133,7 +135,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               );
 
               await FirebaseFirestore.instance
-                  .collection(FirebaseFieldName.restaurantName)
+                  .collection(FirebaseCollectionName.restaurant)
                   .add(
                     userRestarantPayload,
                   );
@@ -190,11 +192,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             final userId = user.uid;
 
             final type = await _getUserType(userId);
+            final userName = await getUserName(user.uid);
             emit(
               AuthStateLoggedIn(
                 isAdmin: type,
                 isLoading: false,
                 userid: userId,
+                userName: userName,
               ),
             );
           }
@@ -211,11 +215,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       (event, emit) async {
         final userid = event.userId;
         final isAdmin = event.isAdmin;
+        final userName = event.userName;
 
         emit(AuthStateLoggedIn(
           isAdmin: isAdmin,
           isLoading: true,
           userid: userid,
+          userName: userName,
         ));
 
         await FirebaseAuth.instance.signOut();
@@ -271,6 +277,29 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     } catch (_) {
       return false;
+    }
+  }
+
+  Future<String> getUserName(String userId) async {
+    try {
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection(
+            FirebaseCollectionName.userprofile,
+          )
+          .where(
+            FirebaseFieldName.userId,
+            isEqualTo: userId,
+          )
+          .limit(1)
+          .get();
+      if (querySnapshot.docs.isNotEmpty) {
+        var document = querySnapshot.docs.first;
+        return document[FirebaseFieldName.name];
+      } else {
+        return '';
+      }
+    } catch (_) {
+      return '';
     }
   }
 }

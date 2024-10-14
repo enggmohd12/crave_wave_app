@@ -18,15 +18,23 @@ abstract class AuthState {
 class AuthStateLoggedIn extends AuthState with EquatableMixin {
   final UserId userid;
   final bool isAdmin;
+  final String userName;
   const AuthStateLoggedIn({
     required super.isLoading,
     required this.userid,
     required this.isAdmin,
+    required this.userName,
     super.authError,
   });
 
   @override
-  List<Object?> get props => [authError, isLoading, userid, isAdmin];
+  List<Object?> get props => [
+        authError,
+        isLoading,
+        userid,
+        isAdmin,
+        userName,
+      ];
 }
 
 @immutable

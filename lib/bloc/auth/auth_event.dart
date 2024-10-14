@@ -38,9 +38,11 @@ class AuthLoggedInEvent extends AuthEvent {
 class AuthLogOutEvent extends AuthEvent {
   final UserId userId;
   final bool isAdmin;
+  final String userName;
   const AuthLogOutEvent({
     required this.userId,
     required this.isAdmin,
+    required this.userName,
   });
 }
 

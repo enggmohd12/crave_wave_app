@@ -5,6 +5,6 @@ import 'package:flutter/foundation.dart' show immutable;
 class FirebaseCollectionName{
   static const userprofile = 'userprofile';
   static const usertype = 'usertype'; 
-  static const restaurant = 'restaurant';
+  static const restaurant = 'restaurantName';
   static const menuItem = 'menuItem';
 }

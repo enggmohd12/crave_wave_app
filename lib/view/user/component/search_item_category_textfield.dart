@@ -1,4 +1,5 @@
 import 'package:crave_wave_app/backend/search_menu_item_category_wise.dart';
+import 'package:crave_wave_app/components/color.dart';
 import 'package:crave_wave_app/model/menu/item_type.dart';
 import 'package:crave_wave_app/model/menu/menu_item.dart';
 import 'package:crave_wave_app/view/user/component/sliding_textfield.dart';
@@ -25,6 +26,12 @@ class _SearchTextFieldState extends State<SearchTextField> {
         horizontal: 20.0,
       ),
       child: TypeAheadField(
+        loadingBuilder: (context) {
+          return const Center(child: CircularProgressIndicator(
+            color: backgroundColor,
+
+          ),);
+        },
         itemBuilder: (context, value) {
           return ListTile(
             leading: CircleAvatar(

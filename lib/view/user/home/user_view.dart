@@ -2,13 +2,17 @@ import 'dart:io';
 import 'package:crave_wave_app/bloc/location/location_bloc/location_bloc.dart';
 import 'package:crave_wave_app/bloc/location/location_event/location_event.dart';
 import 'package:crave_wave_app/bloc/location/location_state/location_state.dart';
+import 'package:crave_wave_app/bloc/restaurant/restaurant_bloc.dart';
+import 'package:crave_wave_app/bloc/restaurant/restaurant_state.dart';
 import 'package:crave_wave_app/components/color.dart';
 import 'package:crave_wave_app/components/dialogs/location_not_enabled_dialog.dart';
 import 'package:crave_wave_app/components/dialogs/loctaion_permission_not_granted_dialog.dart';
 import 'package:crave_wave_app/components/get_location_from_coordinates/get_location_coordinates.dart';
 import 'package:crave_wave_app/components/loading/loading_screen.dart';
+import 'package:crave_wave_app/typedef/user.dart';
 import 'package:crave_wave_app/view/user/component/custome_divider.dart';
 import 'package:crave_wave_app/view/user/component/explore_box.dart';
+import 'package:crave_wave_app/view/user/component/restaurant_home_list.dart';
 import 'package:crave_wave_app/view/user/component/search_item_category_textfield.dart';
 import 'package:crave_wave_app/view/user/contant/explore_list.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +23,13 @@ import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart' as p;
 
 class UserView extends StatefulWidget {
-  const UserView({super.key});
+  final UserId userId;
+  final String userName;
+  const UserView({
+    super.key,
+    required this.userId,
+    required this.userName,
+  });
 
   @override
   State<UserView> createState() => _UserViewState();
@@ -27,6 +37,26 @@ class UserView extends StatefulWidget {
 
 class _UserViewState extends State<UserView> {
   final searchFoodController = TextEditingController();
+  late String greeting;
+  @override
+  void initState() {
+    greetUser();
+    setState(() {});
+    super.initState();
+  }
+
+  void greetUser() {
+    final currentTime = DateTime.now();
+    final hour = currentTime.hour;
+
+    if (hour < 12) {
+      greeting = "Good Morning!";
+    } else if (hour < 18) {
+      greeting = "Good Afternoon!";
+    } else {
+      greeting = "Good Evening!";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +70,18 @@ class _UserViewState extends State<UserView> {
                 LoadingScreen.instance().show(
                   context: context,
                   text: 'Fetching your location',
+                );
+              } else {
+                LoadingScreen.instance().hide();
+              }
+            },
+          ),
+          BlocListener<RestaurantBloc, RestaurantState>(
+            listener: (context, state) {
+              if (state.isLoading) {
+                LoadingScreen.instance().show(
+                  context: context,
+                  text: 'Fetching your restaurant',
                 );
               } else {
                 LoadingScreen.instance().hide();
@@ -61,11 +103,11 @@ class _UserViewState extends State<UserView> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      const Expanded(
+                      Expanded(
                         child: Text(
-                          'Good Morning MOHAMMED AHMED ANSARI!',
+                          '$greeting ${widget.userName.toUpperCase()}',
                           overflow: TextOverflow.visible,
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: Colors.black87,
                               fontWeight: FontWeight.bold,
                               fontSize: 20),
@@ -399,75 +441,6 @@ class _UserViewState extends State<UserView> {
                 SearchTextField(
                   searchFoodController: searchFoodController,
                 ),
-                // Padding(
-                //   padding: const EdgeInsets.symmetric(
-                //     horizontal: 20.0,
-                //   ),
-                //   child: TypeAheadField(
-                //     itemBuilder: (context, value) {
-                //       return ListTile(
-                //         leading: CircleAvatar(
-                //           radius: 25,
-                //           child: ClipOval(
-                //             child: Image.network(
-                //               value.fileUrl,
-                //               width: 50,
-                //               height: 50,
-                //               fit: BoxFit.fill,
-                //             ),
-                //           ),
-                //         ),
-                //         title: Text(value.itemName),
-                //         subtitle: Text(
-                //           '\u{20B9}${value.itemPrice.toString()}',
-                //         ),
-                //         trailing: Stack(
-                //           alignment: Alignment.center,
-                //           children: [
-                //             Icon(
-                //               Icons.crop_square_sharp,
-                //               color: value.itemType == ItemType.veg
-                //                   ? Colors.green
-                //                   : Colors.red,
-                //               size: 30,
-                //             ),
-                //             Icon(
-                //               Icons.circle,
-                //               color: value.itemType == ItemType.veg
-                //                   ? Colors.green
-                //                   : Colors.red,
-                //               size: 8,
-                //             ),
-                //           ],
-                //         ),
-                //       );
-                //     },
-                //     onSelected: (value) {},
-                //     suggestionsCallback: (search) async {
-                //       final menuItem =
-                //           await getMenuItemCateforyWise(searchTerm: search);
-                //       List<MenuItem> lst = menuItem.toList();
-                //       return lst;
-                //     },
-                //     builder: (context, controller, focusNode) {
-                //       return SlidingTextField(
-                //         controller: controller,
-                //         focusNode: focusNode,
-                //       );
-                //     },
-                //     errorBuilder: (context, error) {
-                //       return const Text('Error Occured');
-                //     },
-                //     controller: searchFoodController,
-                //   ),
-                //   // child: SlidingTextField(
-                //   //   controller: searchFoodController,
-                //   // ),
-                //   // UserSearchFoodTextField(
-                //   //   controller: searchFoodController,
-                //   //   hintText: 'Search Food',
-                //   // ),
-                // ),
                 SizedBox(
                   height: height * 0.01,
                 ),
@@ -492,97 +465,60 @@ class _UserViewState extends State<UserView> {
                   height: height * 0.01,
                 ),
                 const CustomDivider(message: "ALL RESTAURANTS"),
-
-                MediaQuery.removePadding(
-                  context: context,
-                  removeTop: true,
-                  child: ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemCount: 20,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 10),
-                        child: Stack(
-                          children: [
-                            Container(
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              height: 200,
-                              width: MediaQuery.of(context).size.width * 0.9,
-                              decoration: BoxDecoration(
-                                  color: Colors.black,
-                                  borderRadius: BorderRadius.circular(12)),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(12.0),
-                                child: Image.asset(
-                                  'asset/image/food_background.jpg',
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
-                            ),
-                            const Positioned(
-                              left: 35,
-                              top: 130,
-                              child: Text(
-                                'Persian Darbar indes //',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 21,
-                                ),
-                              ),
-                            ),
-                            const Positioned(
-                              left: 35,
-                              top: 160,
-                              child: Text(
-                                'Click here to see all the items',
-                              ),
-                            )
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                // Stack(
-                //   children: [
-                //     Container(
-                //       margin: const EdgeInsets.symmetric(horizontal: 20),
-                //       height: 200,
-                //       width: 400,
-                //       decoration: BoxDecoration(
-                //           color: Colors.black,
-                //           borderRadius: BorderRadius.circular(12)),
-                //       child: ClipRRect(
-                //         borderRadius: BorderRadius.circular(12.0),
-                //         child: Image.asset(
-                //           'asset/image/food_background.jpg',
-                //           fit: BoxFit.fill,
+                const RestaurantListHome(),
+                // MediaQuery.removePadding(
+                //   context: context,
+                //   removeTop: true,
+                //   child: ListView.builder(
+                //     physics: const NeverScrollableScrollPhysics(),
+                //     scrollDirection: Axis.vertical,
+                //     shrinkWrap: true,
+                //     itemCount: 20,
+                //     itemBuilder: (context, index) {
+                //       return Container(
+                //         margin: const EdgeInsets.only(bottom: 10),
+                //         child: Stack(
+                //           children: [
+                //             Container(
+                //               margin:
+                //                   const EdgeInsets.symmetric(horizontal: 20),
+                //               height: 200,
+                //               width: MediaQuery.of(context).size.width * 0.9,
+                //               decoration: BoxDecoration(
+                //                   color: Colors.black,
+                //                   borderRadius: BorderRadius.circular(12)),
+                //               child: ClipRRect(
+                //                 borderRadius: BorderRadius.circular(12.0),
+                //                 child: Image.asset(
+                //                   'asset/image/food_background.jpg',
+                //                   fit: BoxFit.fill,
+                //                 ),
+                //               ),
+                //             ),
+                //             const Positioned(
+                //               left: 35,
+                //               top: 130,
+                //               child: Text(
+                //                 'Persian Darbar indes //',
+                //                 style: TextStyle(
+                //                   fontWeight: FontWeight.bold,
+                //                   fontSize: 21,
+                //                 ),
+                //               ),
+                //             ),
+                //             const Positioned(
+                //               left: 35,
+                //               top: 160,
+                //               child: Text(
+                //                 'Click here to see all the items',
+                //               ),
+                //             )
+                //           ],
                 //         ),
-                //       ),
-                //     ),
-                //     const Positioned(
-                //       left: 35,
-                //       top: 130,
-                //       child: Text(
-                //         'Persian Darbar',
-                //         style: TextStyle(
-                //           fontWeight: FontWeight.bold,
-                //           fontSize: 21,
-                //         ),
-                //       ),
-                //     ),
-                //     const Positioned(
-                //       left: 35,
-                //       top: 160,
-                //       child: Text(
-                //         'Click here to see all the items',
-                //       ),
-                //     )
-                //   ],
-                // )
+                //       );
+                //     },
+                //   ),
+                // ),
               ],
             ),
           ),

@@ -32,9 +32,11 @@ class _AdminUserViewState extends State<AdminUserView> {
             builder: (context, state) {
               UserId userId = '';
               bool isAdmin = false;
+              String userName = '';
               if (state is AuthStateLoggedIn) {
                 userId = state.userid;
                 isAdmin = state.isAdmin;
+                userName = state.userName;
               }
               return Row(
                 children: [
@@ -62,6 +64,7 @@ class _AdminUserViewState extends State<AdminUserView> {
                                   AuthLogOutEvent(
                                     userId: userId,
                                     isAdmin: isAdmin,
+                                    userName: userName
                                   ),
                                 );
                           }

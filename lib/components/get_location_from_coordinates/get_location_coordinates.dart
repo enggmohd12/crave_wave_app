@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:crave_wave_app/model/location/location_data.dart';
 import 'package:geocoding/geocoding.dart';
 
@@ -18,11 +20,23 @@ Future<LocationInfo> getLocationName({
   // print(address.subLocality);
   // print(address.street);
 
-  return LocationInfo(
+  if (Platform.isAndroid){
+    return LocationInfo(
+    city: address.locality,
+    country: address.country,
+    pincode: address.postalCode,
+    streetName: address.street,
+    area: address.subLocality
+  );
+  } else{
+    return LocationInfo(
     city: address.subAdministrativeArea,
     country: address.country,
     pincode: address.postalCode,
     streetName: address.street,
     area: address.subLocality
   );
+  }
+
+  
 }

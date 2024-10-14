@@ -4,16 +4,18 @@ import 'package:crave_wave_app/bloc/auth/auth_state.dart';
 import 'package:crave_wave_app/bloc/location/location_bloc/location_bloc.dart';
 import 'package:crave_wave_app/bloc/location/location_event/location_event.dart';
 import 'package:crave_wave_app/bloc/menu/menu_bloc.dart';
+import 'package:crave_wave_app/bloc/restaurant/restaurant_bloc.dart';
+import 'package:crave_wave_app/bloc/restaurant/restaurant_event.dart';
 import 'package:crave_wave_app/components/dialogs/registring_dialog.dart';
 import 'package:crave_wave_app/components/dialogs/show_auth_error.dart';
 import 'package:crave_wave_app/components/loading/loading_screen.dart';
+import 'package:crave_wave_app/typedef/user.dart';
 import 'package:crave_wave_app/view/admin_section/admin_user/admin_user_view.dart';
 import 'package:crave_wave_app/view/login/login_user_view.dart';
 import 'package:crave_wave_app/view/login/login_view.dart';
 import 'package:crave_wave_app/view/onboarding/onboarding_view.dart';
 import 'package:crave_wave_app/view/register/register_view.dart';
 import 'package:crave_wave_app/view/user/user_main_tab/user_main_tab_view.dart';
-import 'package:crave_wave_app/view/user/home/user_view.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -53,7 +55,13 @@ class MyApp extends StatelessWidget {
             ..add(
               const LocationInitializeEvent(),
             ),
-        )
+        ),
+        BlocProvider<RestaurantBloc>(
+          create: (context) => RestaurantBloc()
+            ..add(
+              const GetRestaurant(),
+            ),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -97,11 +105,19 @@ class MyApp extends StatelessWidget {
                 return const OnBoardingView();
               }
             } else if (state is AuthStateLoggedIn) {
+              UserId userid = state.userid;
+              String userName = state.userName;
               if (state.isAdmin) {
                 // return const AdminUserView();
-                return const UserMainTabView(); // Need to change back to AdminUserView() after creating the UI for User
+                return UserMainTabView(
+                  userId: userid,
+                  userName: userName,
+                ); // Need to change back to AdminUserView() after creating the UI for User
               } else {
-                return const UserView();
+                return UserMainTabView(
+                  userId: userid,
+                  userName: userName,
+                );
               }
             } else if (state is AuthStateLogOut) {
               return const LoginUserView();
