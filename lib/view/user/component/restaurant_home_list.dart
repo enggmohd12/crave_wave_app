@@ -75,7 +75,7 @@ class RestaurantListHome extends StatelessWidget {
           );
         }
         return const Center(
-          child: const Text(
+          child: Text(
             'Fetching data!!',
           ),
         );

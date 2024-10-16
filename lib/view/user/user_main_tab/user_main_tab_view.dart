@@ -2,6 +2,7 @@ import 'package:crave_wave_app/components/color.dart';
 import 'package:crave_wave_app/typedef/user.dart';
 import 'package:crave_wave_app/view/user/component/tab_button.dart';
 import 'package:crave_wave_app/view/user/home/user_view.dart';
+import 'package:crave_wave_app/view/user/menu/menu_view.dart';
 import 'package:flutter/material.dart';
 
 class UserMainTabView extends StatefulWidget {
@@ -88,7 +89,7 @@ class _UserMainTabViewState extends State<UserMainTabView> {
                   onTap: () {
                     if (selectedtab != 0) {
                       selectedtab = 0;
-                      selectPageView = Container();
+                      selectPageView = const MenuViewUser();
                     }
 
                     if (mounted) {

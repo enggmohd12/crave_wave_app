@@ -15,7 +15,7 @@ const Map<String, String> exploreIcons = {
 
 const exploreList = [
   {'image':'asset/menu_images/biryani.png','name':'biryani'}
-  ,{'image':'asset/menu_images/pizza.png','name':'asset/menu_images/pizza.png'}
+  ,{'image':'asset/menu_images/pizza.png','name':'pizza'}
   ,{'image':'asset/menu_images/burger.png','name':'burger'}
   ,{'image':'asset/menu_images/cake.png','name':'cake'}
   ,{'image':'asset/menu_images/kebab.png','name':'shawarma'}
