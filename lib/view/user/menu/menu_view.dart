@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:crave_wave_app/components/color.dart';
+import 'package:crave_wave_app/view/user/category/category.dart';
+import 'package:crave_wave_app/view/user/component/search_item_category_textfield.dart';
 import 'package:crave_wave_app/view/user/component/sliding_textfield.dart';
 import 'package:crave_wave_app/view/user/contant/explore_list.dart';
 import 'package:flutter/material.dart';
@@ -95,9 +97,8 @@ class _MenuViewState extends State<MenuViewUser> {
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: SlidingTextField(
-                        controller: controller,
-                        focusNode: focus,
+                      child: SearchTextField(
+                        searchFoodController: controller,
                       ),
                     ),
                     SizedBox(
@@ -118,87 +119,98 @@ class _MenuViewState extends State<MenuViewUser> {
                             return Padding(
                               padding: const EdgeInsets.only(
                                   left: 20, right: 20, bottom: 12),
-                              child: Stack(
-                                children: [
-                                  Container(
-                                    width: width - 58,
-                                    height: 100,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10),
-                                      boxShadow: const [
-                                        BoxShadow(
-                                          color: Colors.black12,
-                                          blurRadius: 7,
-                                          offset: Offset(0, 4),
-                                        ),
-                                      ],
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => CategoryView(
+                                          itemcategory: data['name']!),
                                     ),
-                                  ),
-                                  Column(
-                                    children: [
-                                      const SizedBox(
-                                        height: 20,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          const SizedBox(
-                                            width: 30,
-                                          ),
-                                          Image.asset(
-                                            data['image']!,
-                                            width: 50,
-                                            height: 50,
-                                            fit: BoxFit.contain,
-                                          ),
-                                           Expanded(
-                                            child: Column(
-                                              children: [
-                                                Text(
-                                                  data['name']!.toUpperCase(),
-                                                  style:const  TextStyle(
-                                                    color: backgroundColor,
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.w800,
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                          Container(
-                                            width: 35,
-                                            height: 35,
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                  color: backgroundColor),
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(17.5),
-                                              boxShadow: const [
-                                                BoxShadow(
-                                                  color: Colors.black12,
-                                                  blurRadius: 4,
-                                                  offset: Offset(0, 2),
-                                                ),
-                                              ],
-                                            ),
-                                            alignment: Alignment.center,
-                                            child: const RotatedBox(
-                                                quarterTurns: 210,
-                                                child: Icon(
-                                                  Icons.arrow_back_ios_new,
-                                                  color: backgroundColor,
-                                                )),
+                                  );
+                                },
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      width: width - 58,
+                                      height: 100,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                        boxShadow: const [
+                                          BoxShadow(
+                                            color: Colors.black12,
+                                            blurRadius: 7,
+                                            offset: Offset(0, 4),
                                           ),
                                         ],
                                       ),
-                                    ],
-                                  ),
-                                ],
+                                    ),
+                                    Column(
+                                      children: [
+                                        const SizedBox(
+                                          height: 20,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            const SizedBox(
+                                              width: 30,
+                                            ),
+                                            Image.asset(
+                                              data['image']!,
+                                              width: 50,
+                                              height: 50,
+                                              fit: BoxFit.contain,
+                                            ),
+                                            Expanded(
+                                              child: Column(
+                                                children: [
+                                                  Text(
+                                                    data['name']!.toUpperCase(),
+                                                    style: const TextStyle(
+                                                      color: backgroundColor,
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.w800,
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                            Container(
+                                              width: 35,
+                                              height: 35,
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    color: backgroundColor),
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(17.5),
+                                                boxShadow: const [
+                                                  BoxShadow(
+                                                    color: Colors.black12,
+                                                    blurRadius: 4,
+                                                    offset: Offset(0, 2),
+                                                  ),
+                                                ],
+                                              ),
+                                              alignment: Alignment.center,
+                                              child: const RotatedBox(
+                                                  quarterTurns: 210,
+                                                  child: Icon(
+                                                    Icons.arrow_back_ios_new,
+                                                    color: backgroundColor,
+                                                  )),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             );
                           },
