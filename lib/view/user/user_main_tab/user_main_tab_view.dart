@@ -89,7 +89,7 @@ class _UserMainTabViewState extends State<UserMainTabView> {
                   onTap: () {
                     if (selectedtab != 0) {
                       selectedtab = 0;
-                      selectPageView = const MenuViewUser();
+                      selectPageView = MenuViewUser(userId: widget.userId,);
                     }
 
                     if (mounted) {

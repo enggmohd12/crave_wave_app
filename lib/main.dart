@@ -1,6 +1,9 @@
 import 'package:crave_wave_app/bloc/auth/auth_bloc.dart';
 import 'package:crave_wave_app/bloc/auth/auth_event.dart';
 import 'package:crave_wave_app/bloc/auth/auth_state.dart';
+import 'package:crave_wave_app/bloc/cart_menu_count/cart_menu_count_bloc.dart';
+import 'package:crave_wave_app/bloc/cart_menu_count/cart_menu_count_event.dart';
+import 'package:crave_wave_app/bloc/category/category_bloc.dart';
 import 'package:crave_wave_app/bloc/location/location_bloc/location_bloc.dart';
 import 'package:crave_wave_app/bloc/location/location_event/location_event.dart';
 import 'package:crave_wave_app/bloc/menu/menu_bloc.dart';
@@ -62,6 +65,12 @@ class MyApp extends StatelessWidget {
               const GetRestaurant(),
             ),
         ),
+        BlocProvider<CategoryBloc>(
+          create: (context) => CategoryBloc(),
+        ),
+        BlocProvider<CartMenuBloc>(
+          create: (context) => CartMenuBloc(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -109,11 +118,18 @@ class MyApp extends StatelessWidget {
               String userName = state.userName;
               if (state.isAdmin) {
                 // return const AdminUserView();
+                // need to remove this below code as well after completion of the project
+                context.read<CartMenuBloc>().add(
+                      LoadCategories(userId: userid),
+                    );
                 return UserMainTabView(
                   userId: userid,
                   userName: userName,
                 ); // Need to change back to AdminUserView() after creating the UI for User
               } else {
+                context.read<CartMenuBloc>().add(
+                      LoadCategories(userId: userid),
+                    );
                 return UserMainTabView(
                   userId: userid,
                   userName: userName,

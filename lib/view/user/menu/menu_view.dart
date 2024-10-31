@@ -1,15 +1,24 @@
 import 'dart:io';
 
+import 'package:crave_wave_app/bloc/cart_menu_count/cart_menu_count_bloc.dart';
+import 'package:crave_wave_app/bloc/cart_menu_count/cart_menu_count_state.dart';
+import 'package:crave_wave_app/bloc/category/category_bloc.dart';
+import 'package:crave_wave_app/bloc/category/category_event.dart';
 import 'package:crave_wave_app/components/color.dart';
+import 'package:crave_wave_app/typedef/user.dart';
 import 'package:crave_wave_app/view/user/category/category.dart';
 import 'package:crave_wave_app/view/user/component/search_item_category_textfield.dart';
-import 'package:crave_wave_app/view/user/component/sliding_textfield.dart';
 import 'package:crave_wave_app/view/user/contant/explore_list.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MenuViewUser extends StatefulWidget {
-  const MenuViewUser({super.key});
+  final UserId userId;
+  const MenuViewUser({
+    super.key,
+    required this.userId,
+  });
 
   @override
   State<MenuViewUser> createState() => _MenuViewState();
@@ -62,32 +71,75 @@ class _MenuViewState extends State<MenuViewUser> {
                                   fontSize: 20),
                             ),
                           ),
-                          badges.Badge(
-                            position:
-                                badges.BadgePosition.topEnd(top: -10, end: -10),
-                            badgeContent: const Text(
-                              '9',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            badgeAnimation: const badges.BadgeAnimation.slide(
-                              animationDuration: Duration(seconds: 1),
-                              colorChangeAnimationDuration:
-                                  Duration(seconds: 1),
-                              loopAnimation: false,
-                              curve: Curves.fastOutSlowIn,
-                              colorChangeAnimationCurve: Curves.easeInCubic,
-                            ),
-                            badgeStyle: badges.BadgeStyle(
-                              //shape: badges.BadgeShape.,
-                              badgeColor: backgroundColor,
-                              padding: const EdgeInsets.all(6),
-                              borderRadius: BorderRadius.circular(4),
-                              elevation: 5,
-                            ),
-                            child: const Icon(
-                              Icons.shopping_cart_rounded,
-                              size: 28,
-                            ),
+                          BlocBuilder<CartMenuBloc, CartMenuCountState>(
+                            builder: (context, state) {
+                              if (state is CartMenuData) {
+                                return InkWell(
+                                  onTap: () {
+                                    
+                                  },
+                                  child: badges.Badge(
+                                    position: badges.BadgePosition.topEnd(
+                                        top: -10, end: -10),
+                                    badgeContent:  Text(
+                                      state.totalCount.toString(),
+                                      style: const TextStyle(color: Colors.white),
+                                    ),
+                                    badgeAnimation:
+                                        const badges.BadgeAnimation.slide(
+                                      animationDuration: Duration(seconds: 1),
+                                      colorChangeAnimationDuration:
+                                          Duration(seconds: 1),
+                                      loopAnimation: false,
+                                      curve: Curves.fastOutSlowIn,
+                                      colorChangeAnimationCurve:
+                                          Curves.easeInCubic,
+                                    ),
+                                    badgeStyle: badges.BadgeStyle(
+                                      //shape: badges.BadgeShape.,
+                                      badgeColor: backgroundColor,
+                                      padding: const EdgeInsets.all(6),
+                                      borderRadius: BorderRadius.circular(4),
+                                      elevation: 5,
+                                    ),
+                                    child: const Icon(
+                                      Icons.shopping_cart_rounded,
+                                      size: 28,
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                return badges.Badge(
+                                  position: badges.BadgePosition.topEnd(
+                                      top: -10, end: -10),
+                                  badgeContent: const Text(
+                                    '0',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  badgeAnimation:
+                                      const badges.BadgeAnimation.slide(
+                                    animationDuration: Duration(seconds: 1),
+                                    colorChangeAnimationDuration:
+                                        Duration(seconds: 1),
+                                    loopAnimation: false,
+                                    curve: Curves.fastOutSlowIn,
+                                    colorChangeAnimationCurve:
+                                        Curves.easeInCubic,
+                                  ),
+                                  badgeStyle: badges.BadgeStyle(
+                                    //shape: badges.BadgeShape.,
+                                    badgeColor: backgroundColor,
+                                    padding: const EdgeInsets.all(6),
+                                    borderRadius: BorderRadius.circular(4),
+                                    elevation: 5,
+                                  ),
+                                  child: const Icon(
+                                    Icons.shopping_cart_rounded,
+                                    size: 28,
+                                  ),
+                                );
+                              }
+                            },
                           )
                         ],
                       ),
@@ -121,9 +173,14 @@ class _MenuViewState extends State<MenuViewUser> {
                                   left: 20, right: 20, bottom: 12),
                               child: InkWell(
                                 onTap: () {
+                                  context.read<CategoryBloc>().add(
+                                        CategoryWiseItemEvent(
+                                            searchWord: data['name']!),
+                                      );
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
                                       builder: (context) => CategoryView(
+                                          userId: widget.userId,
                                           itemcategory: data['name']!),
                                     ),
                                   );

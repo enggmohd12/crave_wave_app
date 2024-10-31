@@ -1,4 +1,8 @@
 import 'dart:io';
+import 'package:crave_wave_app/bloc/cart_menu_count/cart_menu_count_bloc.dart';
+import 'package:crave_wave_app/bloc/cart_menu_count/cart_menu_count_state.dart';
+import 'package:crave_wave_app/bloc/category/category_bloc.dart';
+import 'package:crave_wave_app/bloc/category/category_state.dart';
 import 'package:crave_wave_app/bloc/location/location_bloc/location_bloc.dart';
 import 'package:crave_wave_app/bloc/location/location_event/location_event.dart';
 import 'package:crave_wave_app/bloc/location/location_state/location_state.dart';
@@ -88,6 +92,18 @@ class _UserViewState extends State<UserView> {
               }
             },
           ),
+          BlocListener<CategoryBloc, CategoryState>(
+            listener: (context, state) {
+              if (state.isLoading) {
+                LoadingScreen.instance().show(
+                  context: context,
+                  text: 'Fetching item category',
+                );
+              } else {
+                LoadingScreen.instance().hide();
+              }
+            },
+          )
         ],
         child: SingleChildScrollView(
           child: Padding(
@@ -113,31 +129,66 @@ class _UserViewState extends State<UserView> {
                               fontSize: 20),
                         ),
                       ),
-                      badges.Badge(
-                        position:
-                            badges.BadgePosition.topEnd(top: -10, end: -10),
-                        badgeContent: const Text(
-                          '9',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        badgeAnimation: const badges.BadgeAnimation.slide(
-                          animationDuration: Duration(seconds: 1),
-                          colorChangeAnimationDuration: Duration(seconds: 1),
-                          loopAnimation: false,
-                          curve: Curves.fastOutSlowIn,
-                          colorChangeAnimationCurve: Curves.easeInCubic,
-                        ),
-                        badgeStyle: badges.BadgeStyle(
-                          //shape: badges.BadgeShape.,
-                          badgeColor: backgroundColor,
-                          padding: const EdgeInsets.all(6),
-                          borderRadius: BorderRadius.circular(4),
-                          elevation: 5,
-                        ),
-                        child: const Icon(
-                          Icons.shopping_cart_rounded,
-                          size: 28,
-                        ),
+                      BlocBuilder<CartMenuBloc, CartMenuCountState>(
+                        builder: (context, state) {
+                          if (state is CartMenuData) {
+                            return badges.Badge(
+                              position: badges.BadgePosition.topEnd(
+                                  top: -10, end: -10),
+                              badgeContent:  Text(
+                                state.totalCount.toString(),
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                              badgeAnimation: const badges.BadgeAnimation.slide(
+                                animationDuration: Duration(seconds: 1),
+                                colorChangeAnimationDuration:
+                                    Duration(seconds: 1),
+                                loopAnimation: false,
+                                curve: Curves.fastOutSlowIn,
+                                colorChangeAnimationCurve: Curves.easeInCubic,
+                              ),
+                              badgeStyle: badges.BadgeStyle(
+                                //shape: badges.BadgeShape.,
+                                badgeColor: backgroundColor,
+                                padding: const EdgeInsets.all(6),
+                                borderRadius: BorderRadius.circular(4),
+                                elevation: 5,
+                              ),
+                              child: const Icon(
+                                Icons.shopping_cart_rounded,
+                                size: 28,
+                              ),
+                            );
+                          } else {
+                            return badges.Badge(
+                              position: badges.BadgePosition.topEnd(
+                                  top: -10, end: -10),
+                              badgeContent: const Text(
+                                '9',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              badgeAnimation: const badges.BadgeAnimation.slide(
+                                animationDuration: Duration(seconds: 1),
+                                colorChangeAnimationDuration:
+                                    Duration(seconds: 1),
+                                loopAnimation: false,
+                                curve: Curves.fastOutSlowIn,
+                                colorChangeAnimationCurve: Curves.easeInCubic,
+                              ),
+                              badgeStyle: badges.BadgeStyle(
+                                //shape: badges.BadgeShape.,
+                                badgeColor: backgroundColor,
+                                padding: const EdgeInsets.all(6),
+                                borderRadius: BorderRadius.circular(4),
+                                elevation: 5,
+                              ),
+                              child: const Icon(
+                                Icons.shopping_cart_rounded,
+                                size: 28,
+                              ),
+                            );
+                          }
+                        },
                       )
                     ],
                   ),
