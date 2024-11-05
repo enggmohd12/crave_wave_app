@@ -6,9 +6,10 @@ import 'package:flutter/foundation.dart' show immutable;
 class UserRestaurant {
   final UserId userId;
   final String restaurantName;
-  
+  final String restaurantId;
 
   UserRestaurant({
+    required this.restaurantId,
     required Map<String, dynamic> json,
   })  : userId = json[FirebaseFieldName.userId],
         restaurantName = json[FirebaseFieldName.restaurantName];

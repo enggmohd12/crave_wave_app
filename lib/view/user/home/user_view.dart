@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:crave_wave_app/bloc/cart_menu_count/cart_menu_count_bloc.dart';
+import 'package:crave_wave_app/bloc/cart_menu_count/cart_menu_count_event.dart';
 import 'package:crave_wave_app/bloc/cart_menu_count/cart_menu_count_state.dart';
 import 'package:crave_wave_app/bloc/category/category_bloc.dart';
 import 'package:crave_wave_app/bloc/category/category_state.dart';
@@ -14,6 +15,7 @@ import 'package:crave_wave_app/components/dialogs/loctaion_permission_not_grante
 import 'package:crave_wave_app/components/get_location_from_coordinates/get_location_coordinates.dart';
 import 'package:crave_wave_app/components/loading/loading_screen.dart';
 import 'package:crave_wave_app/typedef/user.dart';
+import 'package:crave_wave_app/view/user/cart/cart_view.dart';
 import 'package:crave_wave_app/view/user/component/custome_divider.dart';
 import 'package:crave_wave_app/view/user/component/explore_box.dart';
 import 'package:crave_wave_app/view/user/component/restaurant_home_list.dart';
@@ -132,31 +134,135 @@ class _UserViewState extends State<UserView> {
                       BlocBuilder<CartMenuBloc, CartMenuCountState>(
                         builder: (context, state) {
                           if (state is CartMenuData) {
-                            return badges.Badge(
-                              position: badges.BadgePosition.topEnd(
-                                  top: -10, end: -10),
-                              badgeContent:  Text(
-                                state.totalCount.toString(),
-                                style: const TextStyle(color: Colors.white),
+                            return InkWell(
+                              onTap: () {
+                                context.read<CartMenuBloc>().add(
+                                      LoadCartData(userId: widget.userId),
+                                    );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CartView(
+                                      userId: widget.userId,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: badges.Badge(
+                                position: badges.BadgePosition.topEnd(
+                                    top: -10, end: -10),
+                                badgeContent: Text(
+                                  state.totalCount.toString(),
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                                badgeAnimation:
+                                    const badges.BadgeAnimation.slide(
+                                  animationDuration: Duration(seconds: 1),
+                                  colorChangeAnimationDuration:
+                                      Duration(seconds: 1),
+                                  loopAnimation: false,
+                                  curve: Curves.fastOutSlowIn,
+                                  colorChangeAnimationCurve: Curves.easeInCubic,
+                                ),
+                                badgeStyle: badges.BadgeStyle(
+                                  //shape: badges.BadgeShape.,
+                                  badgeColor: backgroundColor,
+                                  padding: const EdgeInsets.all(6),
+                                  borderRadius: BorderRadius.circular(4),
+                                  elevation: 5,
+                                ),
+                                child: const Icon(
+                                  Icons.shopping_cart_rounded,
+                                  size: 28,
+                                ),
                               ),
-                              badgeAnimation: const badges.BadgeAnimation.slide(
-                                animationDuration: Duration(seconds: 1),
-                                colorChangeAnimationDuration:
-                                    Duration(seconds: 1),
-                                loopAnimation: false,
-                                curve: Curves.fastOutSlowIn,
-                                colorChangeAnimationCurve: Curves.easeInCubic,
+                            );
+                          } else if (state is CartData) {
+                            return InkWell(
+                              onTap: () {
+                                context.read<CartMenuBloc>().add(
+                                      LoadCartData(userId: widget.userId),
+                                    );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CartView(
+                                      userId: widget.userId,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: badges.Badge(
+                                position: badges.BadgePosition.topEnd(
+                                    top: -10, end: -10),
+                                badgeContent: Text(
+                                  state.totalCount.toString(),
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                                badgeAnimation:
+                                    const badges.BadgeAnimation.slide(
+                                  animationDuration: Duration(seconds: 1),
+                                  colorChangeAnimationDuration:
+                                      Duration(seconds: 1),
+                                  loopAnimation: false,
+                                  curve: Curves.fastOutSlowIn,
+                                  colorChangeAnimationCurve: Curves.easeInCubic,
+                                ),
+                                badgeStyle: badges.BadgeStyle(
+                                  //shape: badges.BadgeShape.,
+                                  badgeColor: backgroundColor,
+                                  padding: const EdgeInsets.all(6),
+                                  borderRadius: BorderRadius.circular(4),
+                                  elevation: 5,
+                                ),
+                                child: const Icon(
+                                  Icons.shopping_cart_rounded,
+                                  size: 28,
+                                ),
                               ),
-                              badgeStyle: badges.BadgeStyle(
-                                //shape: badges.BadgeShape.,
-                                badgeColor: backgroundColor,
-                                padding: const EdgeInsets.all(6),
-                                borderRadius: BorderRadius.circular(4),
-                                elevation: 5,
-                              ),
-                              child: const Icon(
-                                Icons.shopping_cart_rounded,
-                                size: 28,
+                            );
+                          } else if (state is CartRestaurantMenuData) {
+                            return InkWell(
+                              onTap: () {
+                                context.read<CartMenuBloc>().add(
+                                      LoadCartData(userId: widget.userId),
+                                    );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CartView(
+                                      userId: widget.userId,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: badges.Badge(
+                                position: badges.BadgePosition.topEnd(
+                                    top: -10, end: -10),
+                                badgeContent: Text(
+                                  state.totalCount.toString(),
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                                badgeAnimation:
+                                    const badges.BadgeAnimation.slide(
+                                  animationDuration: Duration(seconds: 1),
+                                  colorChangeAnimationDuration:
+                                      Duration(seconds: 1),
+                                  loopAnimation: false,
+                                  curve: Curves.fastOutSlowIn,
+                                  colorChangeAnimationCurve: Curves.easeInCubic,
+                                ),
+                                badgeStyle: badges.BadgeStyle(
+                                  //shape: badges.BadgeShape.,
+                                  badgeColor: backgroundColor,
+                                  padding: const EdgeInsets.all(6),
+                                  borderRadius: BorderRadius.circular(4),
+                                  elevation: 5,
+                                ),
+                                child: const Icon(
+                                  Icons.shopping_cart_rounded,
+                                  size: 28,
+                                ),
                               ),
                             );
                           } else {
@@ -164,7 +270,7 @@ class _UserViewState extends State<UserView> {
                               position: badges.BadgePosition.topEnd(
                                   top: -10, end: -10),
                               badgeContent: const Text(
-                                '9',
+                                '0',
                                 style: TextStyle(color: Colors.white),
                               ),
                               badgeAnimation: const badges.BadgeAnimation.slide(
@@ -508,6 +614,7 @@ class _UserViewState extends State<UserView> {
                       return ExploreBox(
                         image: data['image']!,
                         name: data['name']!,
+                        userId: widget.userId,
                       );
                     },
                   ),
@@ -516,60 +623,9 @@ class _UserViewState extends State<UserView> {
                   height: height * 0.01,
                 ),
                 const CustomDivider(message: "ALL RESTAURANTS"),
-                const RestaurantListHome(),
-                // MediaQuery.removePadding(
-                //   context: context,
-                //   removeTop: true,
-                //   child: ListView.builder(
-                //     physics: const NeverScrollableScrollPhysics(),
-                //     scrollDirection: Axis.vertical,
-                //     shrinkWrap: true,
-                //     itemCount: 20,
-                //     itemBuilder: (context, index) {
-                //       return Container(
-                //         margin: const EdgeInsets.only(bottom: 10),
-                //         child: Stack(
-                //           children: [
-                //             Container(
-                //               margin:
-                //                   const EdgeInsets.symmetric(horizontal: 20),
-                //               height: 200,
-                //               width: MediaQuery.of(context).size.width * 0.9,
-                //               decoration: BoxDecoration(
-                //                   color: Colors.black,
-                //                   borderRadius: BorderRadius.circular(12)),
-                //               child: ClipRRect(
-                //                 borderRadius: BorderRadius.circular(12.0),
-                //                 child: Image.asset(
-                //                   'asset/image/food_background.jpg',
-                //                   fit: BoxFit.fill,
-                //                 ),
-                //               ),
-                //             ),
-                //             const Positioned(
-                //               left: 35,
-                //               top: 130,
-                //               child: Text(
-                //                 'Persian Darbar indes //',
-                //                 style: TextStyle(
-                //                   fontWeight: FontWeight.bold,
-                //                   fontSize: 21,
-                //                 ),
-                //               ),
-                //             ),
-                //             const Positioned(
-                //               left: 35,
-                //               top: 160,
-                //               child: Text(
-                //                 'Click here to see all the items',
-                //               ),
-                //             )
-                //           ],
-                //         ),
-                //       );
-                //     },
-                //   ),
-                // ),
+                RestaurantListHome(
+                  userId: widget.userId,
+                ),
               ],
             ),
           ),

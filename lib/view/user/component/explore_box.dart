@@ -1,19 +1,34 @@
+import 'package:crave_wave_app/bloc/category/category_bloc.dart';
+import 'package:crave_wave_app/bloc/category/category_event.dart';
+import 'package:crave_wave_app/typedef/user.dart';
+import 'package:crave_wave_app/view/user/category/category.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ExploreBox extends StatelessWidget {
   final String image;
   final String name;
+  final UserId userId;
   const ExploreBox({
     super.key,
     required this.image,
     required this.name,
+    required this.userId,
   });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        
+        context.read<CategoryBloc>().add(
+              CategoryWiseItemEvent(searchWord: name),
+            );
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => CategoryView(
+                userId: userId, itemcategory: name),
+          ),
+        );
       },
       child: Container(
         height: 70,

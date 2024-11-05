@@ -38,3 +38,37 @@ class CartMenuData extends CartMenuCountState with EquatableMixin {
         data,
       ];
 }
+
+class CartRestaurantMenuData extends CartMenuCountState with EquatableMixin {
+  final List<Map<String, dynamic>> data;
+  final int totalCount;
+  const CartRestaurantMenuData({
+    required this.data,
+    required this.totalCount,
+    required super.isLoading,
+  });
+
+  @override
+  List<Object?> get props => [
+        isLoading,
+        data,
+      ];
+}
+
+class CartData extends CartMenuCountState with EquatableMixin {
+  final List<Map<String, dynamic>> data;
+  final int totalCount;
+  final int totalPrice;
+  const CartData({
+    required this.data,
+    required this.totalCount,
+    required super.isLoading,
+    required this.totalPrice,
+  });
+
+  @override
+  List<Object?> get props => [
+        isLoading,
+        data,
+      ];
+}

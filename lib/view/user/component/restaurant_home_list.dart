@@ -1,11 +1,19 @@
+import 'package:crave_wave_app/bloc/cart_menu_count/cart_menu_count_bloc.dart';
+import 'package:crave_wave_app/bloc/cart_menu_count/cart_menu_count_event.dart';
 import 'package:crave_wave_app/bloc/restaurant/restaurant_bloc.dart';
 import 'package:crave_wave_app/bloc/restaurant/restaurant_state.dart';
+import 'package:crave_wave_app/typedef/user.dart';
+import 'package:crave_wave_app/view/user/restaurant_item/restaurant_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 
 class RestaurantListHome extends StatelessWidget {
-  const RestaurantListHome({super.key});
+  final UserId userId;
+  const RestaurantListHome({
+    super.key,
+    required this.userId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +32,21 @@ class RestaurantListHome extends StatelessWidget {
               itemBuilder: (context, index) {
                 final data = restaurantData.elementAt(index);
                 return InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    context
+                        .read<CartMenuBloc>()
+                        .add(LoadRestaurantBasedCartData(
+                          userId: userId,
+                          restaurantUID: data.userId,
+                        ));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RestaurantItemView(
+                            restaurantUID: data.userId, userId: userId),
+                      ),
+                    );
+                  },
                   child: Container(
                     margin: const EdgeInsets.only(bottom: 10),
                     child: Stack(
@@ -71,7 +93,10 @@ class RestaurantListHome extends StatelessWidget {
           );
         } else if (state is RestaurantNoData) {
           return Center(
-            child: Lottie.asset('asset/animation/data_not_found.json', height: 200,),
+            child: Lottie.asset(
+              'asset/animation/data_not_found.json',
+              height: 200,
+            ),
           );
         }
         return const Center(

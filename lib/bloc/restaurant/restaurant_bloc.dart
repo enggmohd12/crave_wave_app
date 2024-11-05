@@ -25,7 +25,10 @@ class RestaurantBloc extends Bloc<RestaurantEvent, RestaurantState> {
           if (sub.docs.isNotEmpty) {
             final docs = sub.docs;
             final restaurant = docs.map(
-              (doc) => UserRestaurant(json: doc.data()),
+              (doc) => UserRestaurant(
+                json: doc.data(),
+                restaurantId: doc.id,
+              ),
             );
 
             emit(RestaurantData(
