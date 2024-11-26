@@ -67,6 +67,7 @@ class _UserViewState extends State<UserView> {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
     return Scaffold(
       body: MultiBlocListener(
         listeners: [
@@ -455,25 +456,33 @@ class _UserViewState extends State<UserView> {
                         ),
                       );
                     } else if (state is LocationNoPermission) {
-                      return InkWell(
-                        onTap: () async {
-                          Location location = Location();
-
-                          PermissionStatus permissionGranted;
-
-                          permissionGranted = await location.hasPermission();
-                          if (permissionGranted == PermissionStatus.denied) {
-                            permissionGranted =
-                                await location.requestPermission();
-                            if (permissionGranted != PermissionStatus.granted) {
-                              if (context.mounted) {
-                                final result =
-                                    await showLocationPermissionDeniedDialog(
-                                        context);
-                                if (result) {
-                                  await p.openAppSettings();
+                      return SizedBox(
+                        child: InkWell(
+                          onTap: () async {
+                            Location location = Location();
+                        
+                            PermissionStatus permissionGranted;
+                        
+                            permissionGranted = await location.hasPermission();
+                            if (permissionGranted == PermissionStatus.denied) {
+                              permissionGranted =
+                                  await location.requestPermission();
+                              if (permissionGranted != PermissionStatus.granted) {
+                                if (context.mounted) {
+                                  final result =
+                                      await showLocationPermissionDeniedDialog(
+                                          context);
+                                  if (result) {
+                                    await p.openAppSettings();
+                                  }
+                                  return;
                                 }
-                                return;
+                              } else {
+                                if (context.mounted) {
+                                  context
+                                      .read<LocationBloc>()
+                                      .add(const GetLocationEvent());
+                                }
                               }
                             } else {
                               if (context.mounted) {
@@ -482,45 +491,43 @@ class _UserViewState extends State<UserView> {
                                     .add(const GetLocationEvent());
                               }
                             }
-                          } else {
-                            if (context.mounted) {
-                              context
-                                  .read<LocationBloc>()
-                                  .add(const GetLocationEvent());
-                            }
-                          }
-                        },
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Delivering to',
-                                style: TextStyle(fontSize: 11),
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    'No permission granted for location.Tap Here',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.black54,
+                          },
+                          child:  Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Delivering to',
+                                  style: TextStyle(fontSize: 11),
+                                ),
+                                 Row(
+                                  children: [
+                                    SizedBox(
+                                      width: width * 0.8,
+                                      child: const Text(
+                                        'No permission granted for location.Tap Here',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.black54,
+                                        ),
+                                        
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  RotatedBox(
-                                    quarterTurns: 315,
-                                    child: Icon(
-                                      Icons.arrow_back_ios_new,
-                                      color: backgroundColor,
+                                    const SizedBox(
+                                      width: 5,
                                     ),
-                                  ),
-                                ],
-                              )
-                            ],
+                                    const RotatedBox(
+                                      quarterTurns: 315,
+                                      child: Icon(
+                                        Icons.arrow_back_ios_new,
+                                        color: backgroundColor,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       );

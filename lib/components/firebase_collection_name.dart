@@ -8,4 +8,6 @@ class FirebaseCollectionName{
   static const restaurant = 'restaurantName';
   static const menuItem = 'menuItem';
   static const cart = 'cart';
+  static const order = 'order';
+  static const userOrder = 'userOrder';
 }

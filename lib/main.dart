@@ -7,6 +7,8 @@ import 'package:crave_wave_app/bloc/category/category_bloc.dart';
 import 'package:crave_wave_app/bloc/location/location_bloc/location_bloc.dart';
 import 'package:crave_wave_app/bloc/location/location_event/location_event.dart';
 import 'package:crave_wave_app/bloc/menu/menu_bloc.dart';
+import 'package:crave_wave_app/bloc/place_order/place_order_bloc.dart';
+import 'package:crave_wave_app/bloc/place_order/place_order_event.dart';
 import 'package:crave_wave_app/bloc/restaurant/restaurant_bloc.dart';
 import 'package:crave_wave_app/bloc/restaurant/restaurant_event.dart';
 import 'package:crave_wave_app/components/dialogs/registring_dialog.dart';
@@ -71,6 +73,9 @@ class MyApp extends StatelessWidget {
         BlocProvider<CartMenuBloc>(
           create: (context) => CartMenuBloc(),
         ),
+        BlocProvider<PlaceOrderBloc>(
+          create: (context) => PlaceOrderBloc(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -122,6 +127,10 @@ class MyApp extends StatelessWidget {
                 context.read<CartMenuBloc>().add(
                       LoadCategories(userId: userid),
                     );
+
+                context.read<PlaceOrderBloc>().add(FetchOrderDetails(
+                      userId: userid,
+                    ));
                 return UserMainTabView(
                   userId: userid,
                   userName: userName,
@@ -130,6 +139,9 @@ class MyApp extends StatelessWidget {
                 context.read<CartMenuBloc>().add(
                       LoadCategories(userId: userid),
                     );
+                context.read<PlaceOrderBloc>().add(FetchOrderDetails(
+                      userId: userid,
+                    ));
                 return UserMainTabView(
                   userId: userid,
                   userName: userName,

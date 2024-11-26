@@ -228,16 +228,19 @@ class _LocationUIBlocImplementationState
                     ),
                   ],
                 ),
-                  const Row(
+                   Row(
                     children: [
-                      Text(
-                        'No permission granted for location.Tap Here',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black54,
+                      SizedBox(
+                        width: width*0.8,
+                        child:const Text(
+                          'No permission granted for location.Tap Here',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black54,
+                          ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 5,
                       ),
                     ],
