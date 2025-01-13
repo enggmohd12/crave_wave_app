@@ -1,9 +1,13 @@
+import 'package:crave_wave_app/bloc/place_order/place_order_bloc.dart';
+import 'package:crave_wave_app/bloc/place_order/place_order_event.dart';
 import 'package:crave_wave_app/components/color.dart';
 import 'package:crave_wave_app/typedef/user.dart';
 import 'package:crave_wave_app/view/user/component/tab_button.dart';
 import 'package:crave_wave_app/view/user/home/user_view.dart';
 import 'package:crave_wave_app/view/user/menu/menu_view.dart';
+import 'package:crave_wave_app/view/user/orders/orders_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UserMainTabView extends StatefulWidget {
   final UserId userId;
@@ -55,7 +59,7 @@ class _UserMainTabViewState extends State<UserMainTabView> {
                   userName: widget.userName,
                 );
               }
-        
+
               if (mounted) {
                 setState(() {});
               }
@@ -89,7 +93,9 @@ class _UserMainTabViewState extends State<UserMainTabView> {
                   onTap: () {
                     if (selectedtab != 0) {
                       selectedtab = 0;
-                      selectPageView = MenuViewUser(userId: widget.userId,);
+                      selectPageView = MenuViewUser(
+                        userId: widget.userId,
+                      );
                     }
 
                     if (mounted) {
@@ -103,8 +109,13 @@ class _UserMainTabViewState extends State<UserMainTabView> {
                 TabButton(
                   onTap: () {
                     if (selectedtab != 1) {
+                      context.read<PlaceOrderBloc>().add(
+                            FetchOrderDetails(
+                              userId: widget.userId,
+                            ),
+                          );
                       selectedtab = 1;
-                      selectPageView = Container();
+                      selectPageView = const OrdersView();
                     }
 
                     if (mounted) {

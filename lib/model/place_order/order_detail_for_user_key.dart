@@ -5,4 +5,5 @@ class OrderDetailForUserKey{
   static const items = 'items';
   static const status = 'status';
   static const address = 'address';
+  static const itemName = 'itemName';
 }

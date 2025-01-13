@@ -122,19 +122,19 @@ class MyApp extends StatelessWidget {
               UserId userid = state.userid;
               String userName = state.userName;
               if (state.isAdmin) {
-                // return const AdminUserView();
+                return const AdminUserView();
                 // need to remove this below code as well after completion of the project
-                context.read<CartMenuBloc>().add(
-                      LoadCategories(userId: userid),
-                    );
+                // context.read<CartMenuBloc>().add(
+                //       LoadCategories(userId: userid),
+                //     );
 
-                context.read<PlaceOrderBloc>().add(FetchOrderDetails(
-                      userId: userid,
-                    ));
-                return UserMainTabView(
-                  userId: userid,
-                  userName: userName,
-                ); // Need to change back to AdminUserView() after creating the UI for User
+                // context.read<PlaceOrderBloc>().add(FetchOrderDetails(
+                //       userId: userid,
+                //     ));
+                // return UserMainTabView(
+                //   userId: userid,
+                //   userName: userName,
+                // ); // Need to change back to AdminUserView() after creating the UI for User
               } else {
                 context.read<CartMenuBloc>().add(
                       LoadCategories(userId: userid),

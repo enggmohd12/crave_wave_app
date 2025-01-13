@@ -96,13 +96,27 @@ class PlaceOrderBloc extends Bloc<PlaceOrderEvent, PlaceOrderState> {
 
       // Prepare the data for userOrder
       List<Map<String, dynamic>> items = [];
-      cartDoc['item'].forEach((item) {
+
+      // Use a for loop to handle async calls properly
+      for (var item in cartDoc['item']) {
+        final itemDoc = await _firestore
+            .collection(FirebaseCollectionName.menuItem)
+            .doc(item[CartKey.itemId])
+            .get();
+
+        if (!itemDoc.exists) {
+          emit(const PlaceOrderFailureState(
+              isLoading: false, error: 'No data found to place your order.'));
+          return;
+        }
+
         items.add({
           OrderDetailForUserKey.count: item[CartKey.count],
           OrderDetailForUserKey.itemId: item[CartKey.itemId],
+          OrderDetailForUserKey.itemName: itemDoc[MenuItemkey.itemName],
           OrderDetailForUserKey.status: "pending", // Add your status field here
         });
-      });
+      }
 
       // Insert transformed data into the userOrder collection and get the generated document ID
       final DocumentReference orderRef =
@@ -141,7 +155,7 @@ class PlaceOrderBloc extends Bloc<PlaceOrderEvent, PlaceOrderState> {
 
         double itemPrice = (itemDoc[MenuItemkey.itemPrice] as int)
             .toDouble(); // Assuming each item document has `itemPrice` as price
-
+  
         // Calculate total for this item
         double itemTotalPrice = itemPrice * count;
 

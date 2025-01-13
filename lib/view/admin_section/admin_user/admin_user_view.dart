@@ -22,89 +22,106 @@ class AdminUserView extends StatefulWidget {
 class _AdminUserViewState extends State<AdminUserView> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text("Your Order's"),
-        backgroundColor: const Color.fromARGB(255, 255, 111, 0),
-        actions: [
-          BlocBuilder<AuthBloc, AuthState>(
-            builder: (context, state) {
-              UserId userId = '';
-              bool isAdmin = false;
-              String userName = '';
-              if (state is AuthStateLoggedIn) {
-                userId = state.userid;
-                isAdmin = state.isAdmin;
-                userName = state.userName;
-              }
-              return Row(
-                children: [
-                  IconButton(
-                      onPressed: () {
-                        context
-                            .read<MenuBloc>()
-                            .add(GetMenuItemForUserEvent(userId: userId));
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MenuView(
-                              userId: userId,
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text("Your Order's"),
+          backgroundColor: const Color.fromARGB(255, 255, 111, 0),
+          actions: [
+            BlocBuilder<AuthBloc, AuthState>(
+              builder: (context, state) {
+                UserId userId = '';
+                bool isAdmin = false;
+                String userName = '';
+                if (state is AuthStateLoggedIn) {
+                  userId = state.userid;
+                  isAdmin = state.isAdmin;
+                  userName = state.userName;
+                }
+                return Row(
+                  children: [
+                    IconButton(
+                        onPressed: () {
+                          context
+                              .read<MenuBloc>()
+                              .add(GetMenuItemForUserEvent(userId: userId));
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MenuView(
+                                userId: userId,
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                      icon: const Icon(Icons.restaurant_menu_rounded)),
-                  IconButton(
-                      onPressed: () async {
-                        final value = await showLogOutDialog(context);
-                        if (value) {
-                          if (context.mounted) {
-                            context.read<AuthBloc>().add(
-                                  AuthLogOutEvent(
-                                    userId: userId,
-                                    isAdmin: isAdmin,
-                                    userName: userName
-                                  ),
-                                );
+                          );
+                        },
+                        icon: const Icon(Icons.restaurant_menu_rounded)),
+                    IconButton(
+                        onPressed: () async {
+                          final value = await showLogOutDialog(context);
+                          if (value) {
+                            if (context.mounted) {
+                              context.read<AuthBloc>().add(
+                                    AuthLogOutEvent(
+                                        userId: userId,
+                                        isAdmin: isAdmin,
+                                        userName: userName),
+                                  );
+                            }
                           }
-                        }
-                      },
-                      icon: const Icon(Icons.logout)),
-                ],
+                        },
+                        icon: const Icon(Icons.logout)),
+                  ],
+                );
+              },
+            )
+          ],
+          bottom: const TabBar(
+            tabs: [
+              Tab(
+                icon: Icon(Icons.food_bank),
+              ),
+              Tab(
+                icon: Icon(
+                  Icons.check,
+                ),
+              )
+            ],
+          ),
+        ),
+        body: BlocListener<MenuBloc, MenuState>(
+          listener: (context, state) {
+            if (state.isLoading) {
+              LoadingScreen.instance().show(
+                context: context,
+                text: 'Loading...',
               );
-            },
-          )
-        ],
-      ),
-      body: BlocListener<MenuBloc, MenuState>(
-        listener: (context, state) {
-          if (state.isLoading) {
-            LoadingScreen.instance().show(
-              context: context,
-              text: 'Loading...',
-            );
-          } else {
-            LoadingScreen.instance().hide();
-          }
-          final menuError = state.menuError;
-          if (menuError != null) {
-            showMenuError(
-              authError: menuError,
-              context: context,
-            );
-
-            try{
-              if (state.userId != null){
-                context.read<MenuBloc>().add(GetMenuItemForUserEvent(userId: state.userId!));
-              }              
-            }catch(_){
-
+            } else {
+              LoadingScreen.instance().hide();
             }
-          }
-        },
-        child: const Center(
-          child: Text('Admin Login'),
+            final menuError = state.menuError;
+            if (menuError != null) {
+              showMenuError(
+                authError: menuError,
+                context: context,
+              );
+
+              try {
+                if (state.userId != null) {
+                  context
+                      .read<MenuBloc>()
+                      .add(GetMenuItemForUserEvent(userId: state.userId!));
+                }
+              } catch (_) {}
+            }
+          },
+          child: const TabBarView(
+            children: [
+              Icon(Icons.music_note),
+              Icon(Icons.music_video),
+            ],
+          ),
         ),
       ),
     );
