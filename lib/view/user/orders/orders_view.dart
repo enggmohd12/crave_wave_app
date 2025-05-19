@@ -3,7 +3,6 @@ import 'package:crave_wave_app/bloc/place_order/place_order_state.dart';
 import 'package:crave_wave_app/components/color.dart';
 import 'package:crave_wave_app/model/place_order/order_detail_for_user_key.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class OrdersView extends StatefulWidget {

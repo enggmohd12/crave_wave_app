@@ -11,6 +11,8 @@ import 'package:crave_wave_app/bloc/place_order/place_order_bloc.dart';
 import 'package:crave_wave_app/bloc/place_order/place_order_event.dart';
 import 'package:crave_wave_app/bloc/restaurant/restaurant_bloc.dart';
 import 'package:crave_wave_app/bloc/restaurant/restaurant_event.dart';
+import 'package:crave_wave_app/bloc/restaurant_order/restaurant_order_bloc.dart';
+import 'package:crave_wave_app/bloc/restaurant_order/restaurant_order_event.dart';
 import 'package:crave_wave_app/components/dialogs/registring_dialog.dart';
 import 'package:crave_wave_app/components/dialogs/show_auth_error.dart';
 import 'package:crave_wave_app/components/loading/loading_screen.dart';
@@ -76,6 +78,9 @@ class MyApp extends StatelessWidget {
         BlocProvider<PlaceOrderBloc>(
           create: (context) => PlaceOrderBloc(),
         ),
+        BlocProvider<RestaurantOrderBloc>(
+          create: (context) => RestaurantOrderBloc(),
+        )
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -122,6 +127,9 @@ class MyApp extends StatelessWidget {
               UserId userid = state.userid;
               String userName = state.userName;
               if (state.isAdmin) {
+                context.read<RestaurantOrderBloc>().add(
+                      LoadRestaurantOrders(restaurantId: userid),
+                    );
                 return const AdminUserView();
                 // need to remove this below code as well after completion of the project
                 // context.read<CartMenuBloc>().add(

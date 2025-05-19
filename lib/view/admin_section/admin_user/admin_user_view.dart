@@ -77,16 +77,52 @@ class _AdminUserViewState extends State<AdminUserView> {
               },
             )
           ],
-          bottom: const TabBar(
+          bottom: TabBar(
+            indicatorColor: Colors.white,
             tabs: [
               Tab(
-                icon: Icon(Icons.food_bank),
+                child: Column(
+                  mainAxisSize: MainAxisSize
+                      .min, // Ensure the Column does not expand infinitely
+                  children: [
+                    SizedBox(
+                      height: 30, // Explicit height constraint for the image
+                      child: Image.asset(
+                        'asset/menu_images/purchaseorder.png',
+                        fit: BoxFit
+                            .contain, // Prevent the image from overflowing
+                      ),
+                    ),
+                    const SizedBox(height: 2), // Add a small gap
+                    const Text(
+                      'Pending',
+                      style: TextStyle(fontSize: 12), // Keep font size small
+                    ),
+                  ],
+                ),
               ),
               Tab(
-                icon: Icon(
-                  Icons.check,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      height: 30, // Explicit height constraint for the image
+                      child: Image.asset(
+                        'asset/menu_images/success.png',
+                        fit: BoxFit
+                            .contain, // Prevent the image from overflowing
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 2,
+                    ), // Add a small gap
+                    const Text(
+                      'Success',
+                      style: TextStyle(fontSize: 12), // Keep font size small
+                    ),
+                  ],
                 ),
-              )
+              ),
             ],
           ),
         ),
